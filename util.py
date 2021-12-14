@@ -5,9 +5,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
 
-# set seed
-np.random.seed(42)
-
 # string constants
 NO_SHARING_COMBO = "no_sharing_combo"
 LOCATION = "location"

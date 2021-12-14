@@ -1,5 +1,8 @@
 from util import *
 
+# set seed
+np.random.seed(42)
+
 polarization_metrics_classic, final_df_classic = run_axelrod(
     display_name="Classic"
 )
