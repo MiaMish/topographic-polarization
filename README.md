@@ -36,8 +36,9 @@ The following functions are model-specific, as described below:
 ### Parameters
 
 In addition to model-specific parameters, there are few parameters that are shared by all models:
+
 | Parameter | Default Value | Description |
-| --- | --- |
+| --- | --- | --- |
 | `NUM_OF_FEATURES` | 5 | Size of features vector. |
 | `NUM_OF_AGENTS` | 100 | Number of agents that are participating. |
 | `NUM_OF_ITERATIONS` | 100001 | Number of iterations that are executed. |
@@ -65,8 +66,9 @@ Motivation is... todo
 #### Parameters
 
 The parameters specific to this model are:
+
 | Parameter | Default Value | Description |
-| --- | --- |
+| --- | --- | --- |
 | `NUM_OF_TRAITS` | 10 |  An integer between (0, `NUM_OF_TRAITS`) is assigned as the trait for each of the agent's features. |
 
 In addition, this model posses the following constraints on these parameters:
@@ -94,7 +96,8 @@ todo
 #### Parameters
 
 The parameters specific to this model are:
+
 | Parameter | Default Value | Description |
-| --- | --- |
-| `NUM_OF_REGIONS` | - | Each agent belongs to one region from range (0, `NUM_OF_REGIONS`). |
+| --- | --- | --- |
+| `NUM_OF_REGIONS` |  | Each agent belongs to one region from range (0, `NUM_OF_REGIONS`). |
 | `NO_SHARING_COMBO_THRESHOLD` | 4 | If the past `NO_SHARING_COMBO_THRESHOLD` interactions of the active agent were not successful, it will choose another random region. |
