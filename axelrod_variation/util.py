@@ -87,12 +87,30 @@ def _print_as_grid(df):
         traits_in_single_dim = mds.fit_transform(matrix)
 
     # create grid to print
-    grid = [[None for _ in range(int(math.sqrt(len(df))))] for _ in range(int(math.sqrt(len(df))))]
-    for index, row in df.iterrows():
-        grid[row[_ColumnNames.LOCATION][0]][row[_ColumnNames.LOCATION][1]] = traits_in_single_dim[index, 0]
+    divided_by_regions = df.at[0, _ColumnNames.REGION] is not None
+    if divided_by_regions:
+        regions = list(df[_ColumnNames.REGION].unique())
+        regions.sort()
+        print(regions)
+        num_of_rows = len(regions)
+        grid = [[] for _ in range(num_of_rows)]
+        mask = [[] for _ in range(num_of_rows)]
+        for index, row in df.iterrows():
+            grid[regions.index(row[_ColumnNames.REGION])].append(traits_in_single_dim[index, 0])
+            mask[regions.index(row[_ColumnNames.REGION])].append(False)
+        num_of_columns = max([len(row) for row in grid])
+        for row_num in range(len(grid)):
+            grid[row_num].sort()
+            grid[row_num] += [-1] * (num_of_columns - len(grid[row_num]))
+            mask[row_num] += [True] * (num_of_columns - len(mask[row_num]))
+    else:
+        grid = [[None for _ in range(int(math.sqrt(len(df))))] for _ in range(int(math.sqrt(len(df))))]
+        mask = [[False for _ in range(int(math.sqrt(len(df))))] for _ in range(int(math.sqrt(len(df))))]
+        for index, row in df.iterrows():
+            grid[row[_ColumnNames.LOCATION][0]][row[_ColumnNames.LOCATION][1]] = traits_in_single_dim[index, 0]
 
     # print as heatmap
-    sns.heatmap(data=np.array(grid), cbar=False)
+    sns.heatmap(data=np.array(grid), cbar=False, mask=np.array(mask))
     plt.show()
 
 
