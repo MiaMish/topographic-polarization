@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
+import seaborn as sns
+from sklearn.manifold import MDS
 
 # Default values to run the model
 DEFAULT_NO_SHARING_COMBO_THRESHOLD = 4
@@ -71,19 +73,31 @@ def _get_dissimilar_traits(active_traits, num_of_features, passive_traits):
     return dissimilar_traits
 
 
-def _print_as_grid(df, width, height):
-    grid = [[None for _ in range(width)] for _ in range(height)]
+def _print_as_grid(df):
+    # prepare data for dimension reduction
+    matrix = np.zeros((len(df), len(df.at[0, _ColumnNames.TRAITS])))
     for index, row in df.iterrows():
-        grid[row[_ColumnNames.LOCATION][0]][row[_ColumnNames.LOCATION][1]] = str(row[_ColumnNames.TRAITS])
-    print("------------------------")
-    for row in grid:
-        print(", ".join(row))
-    print("------------------------")
+        matrix[index, :] = row[_ColumnNames.TRAITS]
+
+    # reduce dimensionality
+    all_rows_in_matrix_are_the_same = np.all(matrix == matrix[0])
+    traits_in_single_dim = np.full((len(df), 1), 1)
+    if not all_rows_in_matrix_are_the_same:
+        mds = MDS(random_state=0, n_components=1)
+        traits_in_single_dim = mds.fit_transform(matrix)
+
+    # create grid to print
+    grid = [[None for _ in range(int(math.sqrt(len(df))))] for _ in range(int(math.sqrt(len(df))))]
+    for index, row in df.iterrows():
+        grid[row[_ColumnNames.LOCATION][0]][row[_ColumnNames.LOCATION][1]] = traits_in_single_dim[index, 0]
+
+    # print as heatmap
+    sns.heatmap(data=np.array(grid), cbar=False)
+    plt.show()
 
 
 def _update_polarization_metrics(df, iteration_num, polarization_metrics_df, update_interval, display_name):
     if iteration_num % update_interval == 0:
-        # print_as_grid(df, int(math.sqrt(df.shape[0])), int(math.sqrt(df.shape[0])))
         traits_value_count = df[_ColumnNames.TRAITS].apply(lambda x: str(x)).value_counts()
         polarization_metrics_df = polarization_metrics_df.append({
             "iteration": iteration_num,
@@ -159,6 +173,7 @@ def run_axelrod(num_of_agents=DEFAULT_NUM_OF_AGENTS,
         df.loc[active_agent.index[0]] = revised_active_agent.loc[revised_active_agent.index[0]]
         polarization_metrics_df = _update_polarization_metrics(df, iteration_num, polarization_metrics_df,
                                                                update_interval, display_name)
+    _print_as_grid(df)
     print(f"\nFinished running \"{display_name}\" in {int(time.time()) - start}s")
     show_analyze_by_region(df)
 
