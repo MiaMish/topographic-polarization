@@ -3,10 +3,11 @@
 ## High Level Model Structure
 All the implemented models has the same high level structure:
 
-Initialization:
+### Initialization:
 * Create #NUM_OF_AGENTS# agents.
 * Assign to each agent a features vector using #generate_features# function and additional attributes using #generate_attributes# function.
 
+### Iterations
 Run #NUM_OF_ITERATIONS# iterations.
 In each iteration: 
 * Choose active_agent randomly.
@@ -30,7 +31,7 @@ The #generate_features#, #generate_attributes#, #passive_selection#, #agents_int
 
 ### Topographic Variant Axelrod
 | Function | Description |
-| --- | --- | --- |
+| --- | --- |
 | generate_features | Same as "Classic Axelrod". |
 | generate_attributes | Assigned a region randomly (uniformly) from range (0, #NUM_OF_REGIONS#). |
 | passive_selection | Select a random agent from the same region of the agent. |
