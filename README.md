@@ -23,7 +23,7 @@ In each iteration:
 * Change the features vector of the active agent based on the interaction using the `update_features` function. 
 * Change the attribute vector of the active agent based on the interaction using the `update_attributes` function.
 
-### Functions
+## Functions
 
 The following functions are model-specific, as described below: 
 * `generate_features`
@@ -33,7 +33,7 @@ The following functions are model-specific, as described below:
 * `update_features`
 * `update_attributes`
 
-### Parameters
+## Parameters
 
 In addition to model-specific parameters, there are few parameters that are shared by all models:
 
@@ -72,6 +72,7 @@ The parameters specific to this model are:
 | `NUM_OF_TRAITS` | 10 |  An integer between (0, `NUM_OF_TRAITS`) is assigned as the trait for each of the agent's features. |
 
 In addition, this model posses the following constraints on these parameters:
+
 | Parameter | Constraint |
 | --- | --- |
 | `NUM_OF_AGENTS` | sqrt(`NUM_OF_AGENTS`) must be an integer. |
@@ -101,3 +102,11 @@ The parameters specific to this model are:
 | --- | --- | --- |
 | `NUM_OF_REGIONS` |  | Each agent belongs to one region from range (0, `NUM_OF_REGIONS`). |
 | `NO_SHARING_COMBO_THRESHOLD` | 4 | If the past `NO_SHARING_COMBO_THRESHOLD` interactions of the active agent were not successful, it will choose another random region. |
+
+# Measuring Polarization
+
+todo
+
+* Process of polarization vs state of polarization.
+* Visual aids
+ 
