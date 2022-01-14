@@ -56,7 +56,7 @@ def _print_as_grid(df, create_grid):
     grid, mask = create_grid(df, traits_in_single_dim)
 
     # print as heatmap
-    sns.heatmap(data=np.array(grid), cbar=False, mask=np.array(mask))
+    sns.heatmap(data=np.array(grid), mask=np.array(mask))  # cbar=False
     plt.show()
 
 

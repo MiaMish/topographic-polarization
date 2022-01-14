@@ -16,6 +16,7 @@ def topographic_select_passive(active_agent, df):
 
 
 def topographic_update_attributes(active_agent, interaction_successful, regions, no_sharing_combo_threshold):
+    moved_region = 0
     if interaction_successful:
         active_agent.at[active_agent.index[0], ColumnNames.NO_SHARING_COMBO] = 0
     if not interaction_successful \
@@ -25,6 +26,8 @@ def topographic_update_attributes(active_agent, interaction_successful, regions,
         other_regions = [region for region in list(regions.keys()) if
                          region != active_agent.at[active_agent.index[0], ColumnNames.REGION]]
         new_region = np.random.choice(other_regions)
+        if active_agent.at[active_agent.index[0], ColumnNames.REGION] != new_region:
+            moved_region = 1
         active_agent.at[active_agent.index[0], ColumnNames.REGION] = new_region
         active_agent.at[active_agent.index[0], ColumnNames.NO_SHARING_COMBO] = 0
 
@@ -33,4 +36,4 @@ def topographic_update_attributes(active_agent, interaction_successful, regions,
             and len(regions.keys()) > 1 \
             and active_agent.at[active_agent.index[0], ColumnNames.NO_SHARING_COMBO] < no_sharing_combo_threshold:
         active_agent.at[active_agent.index[0], ColumnNames.NO_SHARING_COMBO] += 1
-    return active_agent
+    return active_agent, {"is moved region": moved_region}

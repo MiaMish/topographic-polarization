@@ -33,18 +33,18 @@ def _run_axelrod(num_of_agents,
         active_agent = df.sample()
         passive_agent = passive_selection(active_agent, df)
         interaction_successful = agents_interact(active_agent, passive_agent)
-        revised_active_agent = update_features(active_agent, passive_agent, interaction_successful)
-        revised_active_agent = update_attributes(revised_active_agent.copy(), interaction_successful)
+        revised_active_agent, update_features_additional_info = update_features(active_agent, passive_agent, interaction_successful)
+        revised_active_agent, update_attributes_additional_info = update_attributes(revised_active_agent.copy(), interaction_successful)
         df.loc[active_agent.index[0]] = revised_active_agent.loc[revised_active_agent.index[0]]
 
         # update iteration polarization metrics
         traits_value_count = df[ColumnNames.TRAITS].apply(lambda x: str(x)).value_counts()
-        polarization_metrics_df = polarization_metrics_df.append({
+        polarization_metrics_df = polarization_metrics_df.append({**{
             "iteration": iteration_num,
             "giant size ratio": traits_value_count[0] / df.shape[0],
             "groups count": traits_value_count.size,
             "is interaction successful": interaction_successful
-        }, ignore_index=True)
+        }, **update_features_additional_info, **update_attributes_additional_info}, ignore_index=True)
 
     print(f"\nFinished running \"{display_name}\" in {int(time.time()) - start}s")
 
@@ -73,7 +73,7 @@ def run_classic(num_of_agents=DEFAULT_NUM_OF_AGENTS,
                         passive_selection=classic_select_passive,
                         agents_interact=classic_agents_interact,
                         update_features=classic_update_features,
-                        update_attributes=lambda *args: args[0])
+                        update_attributes=lambda *args: (args[0], {}))
 
 
 def run_topographic(regions,

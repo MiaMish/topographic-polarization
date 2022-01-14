@@ -52,10 +52,10 @@ def classic_update_features(active_agent, passive_agent, interaction_successful)
     num_of_features = len(passive_traits)
     dissimilar_traits = _get_dissimilar_traits(active_traits, num_of_features, passive_traits)
     if len(dissimilar_traits) == 0:
-        return active_agent
+        return active_agent, {"is features changed": 0}
     if interaction_successful:
         trait_to_share = np.random.choice(dissimilar_traits)
         active_traits[trait_to_share] = passive_traits[trait_to_share]
     active_agent.at[active_agent.index[0], ColumnNames.TRAITS] = active_traits
-    return active_agent
+    return active_agent, {"is features changed": 1 if interaction_successful else 0}
 
