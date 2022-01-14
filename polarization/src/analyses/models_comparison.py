@@ -12,12 +12,13 @@ def show_polarization_metrics(polarization_metrics_df):
     # rolling_avg_window_size = something based of polarization_metrics_df.shape[0] ?
     rolling_avg_window_size = 100
     print(f"Using rolling avg window {rolling_avg_window_size}")
+    print(f"polarization_metrics_df size: {polarization_metrics_df.shape[0]}")
     rolling_mean_metrics_df = polarization_metrics_df.copy()[columns_for_rolling_mean].rolling(window=rolling_avg_window_size).mean()
     rolling_mean_metrics_df = rolling_mean_metrics_df.apply(pd.to_numeric)
 
     rolling_mean_metrics_df.plot(
         y=[col for col in list(rolling_mean_metrics_df.columns) if col.endswith(" groups count")],
-        title="Group Count"
+        title="Groups Count"
     )
     plt.show()
 
@@ -37,14 +38,14 @@ def show_polarization_metrics(polarization_metrics_df):
 
     rolling_mean_metrics_df.plot(
         y=[col for col in list(rolling_mean_metrics_df.columns) if col.endswith(" is features changed")],
-        title="Features Changed in Interaction",
+        title="Features Changes",
 
     )
     plt.show()
 
     rolling_mean_metrics_df.plot(
         y=[col for col in list(rolling_mean_metrics_df.columns) if col.endswith(" is moved region")],
-        title="Region relocations",
+        title="Num of Relocations",
 
     )
     plt.show()

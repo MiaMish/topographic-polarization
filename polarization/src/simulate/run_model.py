@@ -7,7 +7,6 @@ from ..models.topographic_variant import *
 # Default values to run the model
 DEFAULT_NO_SHARING_COMBO_THRESHOLD = 4
 DEFAULT_DISPLAY_NAME = "Axelrod Model"
-DEFAULT_NUM_OF_INTERVALS = 100
 DEFAULT_NUM_OF_ITERATIONS = 100001
 DEFAULT_NUM_OF_TRAITS = 10
 DEFAULT_NUM_OF_FEATURES = 5
@@ -33,18 +32,22 @@ def _run_axelrod(num_of_agents,
         active_agent = df.sample()
         passive_agent = passive_selection(active_agent, df)
         interaction_successful = agents_interact(active_agent, passive_agent)
-        revised_active_agent, update_features_additional_info = update_features(active_agent, passive_agent, interaction_successful)
-        revised_active_agent, update_attributes_additional_info = update_attributes(revised_active_agent.copy(), interaction_successful)
+        revised_active_agent, update_features_additional_info = update_features(active_agent, passive_agent,
+                                                                                interaction_successful)
+        revised_active_agent, update_attributes_additional_info = update_attributes(revised_active_agent.copy(),
+                                                                                    interaction_successful)
         df.loc[active_agent.index[0]] = revised_active_agent.loc[revised_active_agent.index[0]]
 
         # update iteration polarization metrics
         traits_value_count = df[ColumnNames.TRAITS].apply(lambda x: str(x)).value_counts()
-        polarization_metrics_df = polarization_metrics_df.append({**{
-            "iteration": iteration_num,
-            "giant size ratio": traits_value_count[0] / df.shape[0],
-            "groups count": traits_value_count.size,
-            "is interaction successful": interaction_successful
-        }, **update_features_additional_info, **update_attributes_additional_info}, ignore_index=True)
+        should_register_metrics = True if num_of_iterations < 1000 else iteration_num % int(num_of_iterations / 1000) == 0
+        if should_register_metrics:
+            polarization_metrics_df = polarization_metrics_df.append({**{
+                "iteration": iteration_num,
+                "giant size ratio": traits_value_count[0] / df.shape[0],
+                "groups count": traits_value_count.size,
+                "is interaction successful": interaction_successful
+            }, **update_features_additional_info, **update_attributes_additional_info}, ignore_index=True)
 
     print(f"\nFinished running \"{display_name}\" in {int(time.time()) - start}s")
 
@@ -69,7 +72,8 @@ def run_classic(num_of_agents=DEFAULT_NUM_OF_AGENTS,
                         num_of_iterations=num_of_iterations,
                         display_name=display_name,
                         generate_attributes=lambda agent_num: classic_generate_attributes(agent_num, num_of_agents),
-                        generate_features=lambda _: classic_generate_features(num_of_features, np.arange(num_of_traits)),
+                        generate_features=lambda _: classic_generate_features(num_of_features,
+                                                                              np.arange(num_of_traits)),
                         passive_selection=classic_select_passive,
                         agents_interact=classic_agents_interact,
                         update_features=classic_update_features,
