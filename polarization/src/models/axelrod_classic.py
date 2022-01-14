@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from columns_consts import ColumnNames
+from ..columns_consts import ColumnNames
 
 
 def _get_dissimilar_traits(active_traits, num_of_features, passive_traits):

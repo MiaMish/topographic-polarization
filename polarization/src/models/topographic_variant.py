@@ -1,5 +1,5 @@
 import numpy as np
-from columns_consts import ColumnNames
+from ..columns_consts import ColumnNames
 
 
 def topographic_generate_attributes(regions):

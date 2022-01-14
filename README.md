@@ -49,7 +49,7 @@ In addition to model-specific parameters, there are few parameters that are shar
 
 #### Overview
 
-Based on the article: todo
+Based on the article: Axelrod, R. (1997). The Dissemination of Culture: A Model with Local Convergence and Global Polarization. Journal of Conflict Resolution, 41(2), 203–226. https://doi.org/10.1177/0022002797041002001
 Motivation is... todo
 
 #### Functions
