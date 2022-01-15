@@ -40,14 +40,12 @@ def _run_axelrod(num_of_agents,
 
         # update iteration polarization metrics
         traits_value_count = df[ColumnNames.TRAITS].apply(lambda x: str(x)).value_counts()
-        should_register_metrics = True if num_of_iterations < 1000 else iteration_num % int(num_of_iterations / 1000) == 0
-        if should_register_metrics:
-            polarization_metrics_df = polarization_metrics_df.append({**{
-                "iteration": iteration_num,
-                "giant size ratio": traits_value_count[0] / df.shape[0],
-                "groups count": traits_value_count.size,
-                "is interaction successful": interaction_successful
-            }, **update_features_additional_info, **update_attributes_additional_info}, ignore_index=True)
+        polarization_metrics_df = polarization_metrics_df.append({**{
+            "iteration": iteration_num,
+            "giant size ratio": traits_value_count[0] / df.shape[0],
+            "groups count": traits_value_count.size,
+            "is interaction successful": interaction_successful
+        }, **update_features_additional_info, **update_attributes_additional_info}, ignore_index=True)
 
     print(f"\nFinished running \"{display_name}\" in {int(time.time()) - start}s")
 

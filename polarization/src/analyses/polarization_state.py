@@ -10,32 +10,11 @@ def _classic_print_as_grid(df):
     _print_as_grid(df, _classic_create_grid)
 
 
-def _topographic_print_as_grid(df):
-    _print_as_grid(df, _topographic_create_grid)
-
-
 def _classic_create_grid(df, traits_in_single_dim):
     grid = [[None for _ in range(int(math.sqrt(len(df))))] for _ in range(int(math.sqrt(len(df))))]
     mask = [[False for _ in range(int(math.sqrt(len(df))))] for _ in range(int(math.sqrt(len(df))))]
     for index, row in df.iterrows():
         grid[row[ColumnNames.LOCATION][0]][row[ColumnNames.LOCATION][1]] = traits_in_single_dim[index, 0]
-    return grid, mask
-
-
-def _topographic_create_grid(df, traits_in_single_dim):
-    regions = list(df[ColumnNames.REGION].unique())
-    regions.sort()
-    num_of_rows = len(regions)
-    grid = [[] for _ in range(num_of_rows)]
-    mask = [[] for _ in range(num_of_rows)]
-    for index, row in df.iterrows():
-        grid[regions.index(row[ColumnNames.REGION])].append(traits_in_single_dim[index, 0])
-        mask[regions.index(row[ColumnNames.REGION])].append(False)
-    num_of_columns = max([len(row) for row in grid])
-    for row_num in range(len(grid)):
-        grid[row_num].sort()
-        grid[row_num] += [-1] * (num_of_columns - len(grid[row_num]))
-        mask[row_num] += [True] * (num_of_columns - len(mask[row_num]))
     return grid, mask
 
 
@@ -63,13 +42,15 @@ def _print_as_grid(df, create_grid):
 def _show_analyze_by_region(df):
     df["traits_as_str"] = df[ColumnNames.TRAITS].apply(lambda x: str(x))
     analyze_by_region_df = pd.DataFrame()
-    analyze_by_region_df["unique_traits"] = df.groupby(ColumnNames.REGION)["traits_as_str"].nunique()
+    analyze_by_region_df["num_of_unique_traits"] = df.groupby(ColumnNames.REGION)["traits_as_str"].nunique()
+    analyze_by_region_df["unique_traits"] = df.groupby(ColumnNames.REGION)["traits_as_str"].unique().apply(lambda x: str(x))
     analyze_by_region_df["population_size"] = df.groupby(ColumnNames.REGION).size()
     print(analyze_by_region_df.to_markdown())
 
 
 def _analyze_polarization_state(df, print_heat_map, model_specific_polarization_state_analyze):
-    print_heat_map(df)
+    if print_heat_map is not None:
+        print_heat_map(df)
     model_specific_polarization_state_analyze(df)
 
 
@@ -79,5 +60,5 @@ def classic_analyze_polarization_state(df):
 
 
 def topographic_analyze_polarization_state(df):
-    _analyze_polarization_state(df, print_heat_map=_topographic_print_as_grid,
+    _analyze_polarization_state(df, print_heat_map=None,
                                 model_specific_polarization_state_analyze=_show_analyze_by_region)
