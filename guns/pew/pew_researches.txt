@@ -1,0 +1,15 @@
+Pew Research Center, “Pew Research Center Poll: Response Rate Project,” USPEW1997-RESP, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, June 1997.
+Pew Research Center, “Pew Research Center Poll: April 2000 News Interest Index—Clinton Impeachment/Gun Control/Safety of Schools/Columbine Shooting,” USPEW2000-04NII, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, April 2000.
+Pew Research Center, “Pew Research Center Poll: 2003 Religion and Public Life,” USPEW2003-RELIG, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, June 2003.
+Pew Research Center, “Pew Research Center Poll: Typology—Politics/News/Economy/Stem Cell Research/Trade/Taxes/Federal Budget/Iraq/Patriot Act/Internet Use,” USPEW2004-TYPO, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, December 2004.
+Pew Research Center, “Pew Research Center Poll: April 2007 Political Survey—2008 Presidential Election/Gun Control/Schools/Iraq,” USPEW2007-04POL, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, April 2007.
+Pew Research Center, “Pew Research Center: April 2009 Values Survey,” USPEW2009-VALUES, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, March 2009.
+Pew Research Center, “Pew Social and Demographic Trends Poll: January 2010 Millennial Survey,” USPEW2010-01SDT, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, January 2010a.
+Pew Research Center, “Pew Research Center Poll: Trust in Government,” USPEW2010-GOVTRUST, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, March 2010b.
+Pew Research Center, “Pew Research Center Poll: 2011 Political Typology Survey,” USPEW2011-TYPO, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, February 2011.
+Pew Research Center, “Pew Research Center Poll: December 2012 Gun Control Survey,” USPEW2012-12GUN, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, December 2012.
+Pew Research Center, “Pew Research Center Poll: January 2013 Political Survey,” USPEW2013-01POL, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, January 2013a.
+Pew Research Center, “Pew Research Center Poll: February 2013 Political Survey,” USPEW2013-02POL, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, February 2013b.
+Pew Research Center, “Pew Research Center Poll: May 2013 Political Survey,” USPEW2013-05POL, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, May 2013c.
+Pew Research Center, “Pew Research Center: July 2015 Political Survey,” USPEW2015-07POL, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, July 2015.
+Pew Research Center, “Pew Research Center: August 2016 Political Survey,” USPEW2016-0816, Version 2, Ithaca, N.Y.: Roper Center for Public Opinion Research, RoperExpress, August 2016.

@@ -1,0 +1,6 @@
+index,Seed,Ticks,SuccessfulInfluence,Topology,neighborhood,num_agents,num_features,num_traits,communication_regime,homophily,seed,np_random_generator,Regions,Isolates,Homogeneity,AverageDistance
+0,15227,100,12,grid,moore,100,5,15,one-to-one,0.25,15227,Generator(PCG64),100,100,0.01,0.9280000000000015
+0,13453,100,12,grid,moore,100,5,15,one-to-one,0.5,13453,Generator(PCG64),100,100,0.01,0.9245000000000018
+0,18677,100,4,grid,moore,100,5,15,one-to-one,1.0,18677,Generator(PCG64),100,100,0.01,0.9235000000000022
+0,90749,100,4,grid,moore,100,5,15,one-to-one,2.0,90749,Generator(PCG64),100,100,0.01,0.9325000000000017
+0,50756,100,2,grid,moore,100,5,15,one-to-one,4.0,50756,Generator(PCG64),100,100,0.01,0.9230000000000019
