@@ -1,0 +1,50 @@
+    # Success rate: the rate of successful interactions among all interactions in the
+    # final 1000 rounds of the simulation.
+
+    # Mean absolute correlation: For each pair of traits we measure their
+    # correlation in the population, take the absolute value and compute the
+    # mean.
+
+    # Near pairs / far pairs: We measured the ratio of pair of individuals that are
+    # near each other, among all pairs of individuals, and similarly for far pairs. A
+    # near pair is defined as a pair such that their maximal distance between traits
+    # is at most s (the interaction success threshold), and in a far pair the minimal
+    # distance is at least 2-s. I.e., a near pair is likely to interact successfully for
+    # every trait, and the opposite is true for a far pair.
+
+    # Mid-ratio: the ratio of individuals that have at least one trait within the range
+    # [-0.8,0.8].
+
+    # Num of stable regions - stable region := all agents has 0% to interact with...
+
+    # spread can be measured as the value of the
+    # agent with the highest belief value minus the value of the agent with the
+    # lowest belief value (sometimes called the ‘range’ of the data).
+
+    # Any of various measures of statistical dispersion might be used: mean difference, average absolute deviation, standard deviation, coefficient of variation, or entropy.
+
+    # The proportion of empty bins
+    # will then constitute a measure of polarization as coverage. That discrete
+    # measure, although simple, depends on the choice of bins: varying the width
+    # or location of bins can alter the measure for the same underlying data
+
+    # coverage: uncovered opinion spaces corresponds directly to the concept of coverage
+
+    # Community Fracturing: num of local min points
+
+    # exogenous groups, we can instead measure the overlap of the two
+    # groups;
+
+    # distance between
+    # group means, whether those groups are defined endogenously or exogenously.
+
+    # If the groups are fully distinct,
+    # then one can also find the distance between the maximum value in one group
+    # to the minimum value in the next, that is, the width of the empty space between the groups.
+
+    # measure of groups consensus is the absolute deviation within each group, aggregated over all the groups (e.g., the sizeweighted average).
+
+    # rolling average: prop of successful interactions
+
+    # size parity sum of the differences in size of each group from the mean group
+    # size.
