@@ -51,7 +51,9 @@ class SimulationConfig:
         :param num_of_repetitions:
         :param switch_agent_rate:
         :param switch_agent_sigma:
-        :param radical_exposure_eta:
+        :param radical_exposure_eta: Agent j is influencing in a specific interaction only if 
+        a random boolean variable is true. 
+        That variable takes the value true with probability p=radical_exposure_eta * abs(0.5 - opinion of j). 
         :param truncate_at: If the update opinion of an agent is outside [x, 1-x],
         we truncate their opinion to be equal to x (or 1-x).
         This is done to prevent cases where opinions are outside ot the valid range ([0, 1]).

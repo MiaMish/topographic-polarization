@@ -15,12 +15,11 @@ class SimilaritySimulation(Simulation):
     def _update_opinions(self, agent_i: int, agent_j: int) -> List[float]:
         new_opinion_i = self.opinions_list[agent_i]
         new_opinion_j = self.opinions_list[agent_j]
-        if self._is_similar_enough(self.opinions_list[agent_i],
-                                   self.opinions_list[agent_j]):
+        agents_are_similar_enough = self._is_similar_enough(self.opinions_list[agent_i], self.opinions_list[agent_j])
+        if agents_are_similar_enough and self._is_exposed_to_passive(self.opinions_list[agent_j]):
             new_opinion_i = self.opinions_list[agent_i] + self.simulation_config.mio * (
                     self.opinions_list[agent_j] - self.opinions_list[agent_i])
-        if self._is_similar_enough(self.opinions_list[agent_i],
-                                   self.opinions_list[agent_j]):
+        if agents_are_similar_enough and self._is_exposed_to_passive(self.opinions_list[agent_i]):
             new_opinion_j = self.opinions_list[agent_j] + self.simulation_config.mio * (
                     self.opinions_list[agent_i] - self.opinions_list[agent_j])
         return [

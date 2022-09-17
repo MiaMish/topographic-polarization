@@ -38,11 +38,25 @@ class AssimilationSimulation(Simulation):
         if agent in self.stubborn_agents:
             return agent_opinion
         distance_from_neighbors_opinions = [neighbor_opinion - agent_opinion for neighbor_opinion in self.opinions_list]
+        is_exposed_indicators = [self._is_exposed_to_passive(self.opinions_list[j]) for j in range(len(self.opinions_list))]
         neighbors_cumulative_effect = sum([
-            distance_from_neighbors_opinions[j] * self.weights_dict[f'{agent}'][j]
+            is_exposed_indicators[j] * distance_from_neighbors_opinions[j] * self.weights_dict[f'{agent}'][j]
             for j in range(len(self.opinions_list))
         ])
-        return agent_opinion + self.simulation_config.mio * neighbors_cumulative_effect
+        exposure_normalizer_coefficient_denominator = sum([
+            is_exposed_indicators[j] * self.weights_dict[f'{agent}'][j]
+            for j in range(len(self.opinions_list))
+        ])
+        exposure_normalizer_coefficient = 1 / exposure_normalizer_coefficient_denominator \
+            if exposure_normalizer_coefficient_denominator > 0 \
+            else 1
+        if agent == 1:
+            print(f"distance_from_neighbors_opinions={distance_from_neighbors_opinions}\n"
+                  f"is_exposed_indicators={is_exposed_indicators}\n"
+                  f"neighbors_cumulative_effect={neighbors_cumulative_effect}\n"
+                  f"exposure_normalizer_coefficient={exposure_normalizer_coefficient}\n"
+                  f"self.weights_dict[f'{agent}']={self.weights_dict[f'{agent}']}")
+        return agent_opinion + self.simulation_config.mio * exposure_normalizer_coefficient * neighbors_cumulative_effect
 
     def _update_opinions(self, agent_i, agent_j):
         return [self._update_single_opinion(i) for i in range(self.simulation_config.num_of_agents)]

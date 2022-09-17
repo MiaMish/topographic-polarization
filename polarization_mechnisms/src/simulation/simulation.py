@@ -48,6 +48,7 @@ class Simulation(ABC):
                 agent_to_switch = random.choice(range(self.simulation_config.num_of_agents), replace=False)
                 new_agent_opinion = self._truncate_opinion(self.opinions_list[agent_to_switch])
                 self.opinions_list[agent_to_switch] = new_agent_opinion
+                continue
             agent_i, agent_j = random.choice(range(self.simulation_config.num_of_agents), 2, replace=False)
             if self._is_exposed_to_passive(self.opinions_list[agent_j]):
                 self.opinions_list = self._update_opinions(agent_i, agent_j)
