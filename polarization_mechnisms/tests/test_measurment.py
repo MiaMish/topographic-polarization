@@ -93,7 +93,7 @@ def test_dispersion(simulation_result, simulation_conf):
 
 def test_covered_bins(simulation_result, simulation_conf):
     actual = measurment.covered_bins(simulation_result, simulation_conf)
-    expected = np.array([0.4, 0.4, 0.425, 0.4, 0.4])
+    expected = np.array([0.45, 0.45, 0.45, 0.4, 0.4 ])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
@@ -104,6 +104,16 @@ def test_covered_bins(simulation_result, simulation_conf):
 def test_num_of_clusters(simulation_result, simulation_conf):
     actual = measurment.num_of_clusters(simulation_result, simulation_conf)
     expected = np.array([2, 2, 2, 2.25, 2.25])
+    print(f"Expected:\n"
+          f"{expected}\n"
+          f"Actual\n"
+          f"{actual}")
+    numpy.testing.assert_almost_equal(actual, expected)
+
+
+def test_num_of_local_max(simulation_result, simulation_conf):
+    actual = measurment.num_of_local_max(simulation_result, simulation_conf)
+    expected = np.array([2, 2, 2, 2, 2])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
