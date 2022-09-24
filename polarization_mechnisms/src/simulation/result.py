@@ -25,7 +25,7 @@ class SimulationResult:
         # TODO: change from dict to pd/np obj for performance
         self.iteration_map: Dict[str, IterationResult] = {}
 
-    def get_results_df(self):
+    def get_results_df(self) -> pd.DataFrame:
         return pd.DataFrame({k: v.get_opinions() for k, v in self.iteration_map.items()}).transpose()
 
     def add_iteration_result(self, iteration: int, to_results: IterationResult) -> None:
