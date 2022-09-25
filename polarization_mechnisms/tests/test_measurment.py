@@ -119,3 +119,23 @@ def test_num_of_local_max(simulation_result, simulation_conf):
           f"Actual\n"
           f"{actual}")
     numpy.testing.assert_almost_equal(actual, expected)
+
+
+def test_ripley_estimator(simulation_result, simulation_conf):
+    actual = measurment.ripley_estimator(simulation_result, simulation_conf)
+    expected = np.array([0, 0, 0, 0, 0])
+    print(f"Expected:\n"
+          f"{expected}\n"
+          f"Actual\n"
+          f"{actual}")
+    numpy.testing.assert_almost_equal(actual, expected)
+
+
+def test_disconnect_index(simulation_result, simulation_conf):
+    actual = measurment.disconnect_index(simulation_result, simulation_conf, disconnect_factor=0.001)
+    expected = np.array([3, 4, 4, 4, 4])
+    print(f"Expected:\n"
+          f"{expected}\n"
+          f"Actual\n"
+          f"{actual}")
+    numpy.testing.assert_almost_equal(actual, expected)
