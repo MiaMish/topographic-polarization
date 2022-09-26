@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Callable, List
 
 import numpy as np
@@ -11,6 +12,12 @@ from experiment.result import ExperimentResult
 
 
 # TODO - all functions here have REALLY bad performance and it's easy to fix it...
+
+
+class MeasurementType(Enum):
+    SPREAD = 1
+    DISPERSION = 2
+    COVERED_BINS = 3
 
 
 def _apply_measure(
