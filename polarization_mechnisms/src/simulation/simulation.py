@@ -1,3 +1,4 @@
+import datetime
 from abc import abstractmethod, ABC
 from typing import List
 
@@ -41,6 +42,7 @@ class Simulation(ABC):
 
     def run_simulation(self) -> SimulationResult:
         results = SimulationResult()
+        results.timestamp = datetime.datetime.now()
         for iteration in range(self.simulation_config.num_iterations):
             if self.simulation_config.audit_iteration_predicate(iteration):
                 results.add_iteration_result(iteration, IterationResult(self.opinions_list))
@@ -52,6 +54,7 @@ class Simulation(ABC):
             agent_i, agent_j = random.choice(range(self.simulation_config.num_of_agents), 2, replace=False)
             if self._is_exposed_to_passive(self.opinions_list[agent_j]):
                 self.opinions_list = self._update_opinions(agent_i, agent_j)
+        results.run_time = datetime.datetime.now() - results.timestamp
         return results
 
     @abstractmethod

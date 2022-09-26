@@ -8,7 +8,6 @@ from scipy.signal import argrelmax, argrelmin
 from sklearn.cluster import KMeans
 
 from experiment.result import ExperimentResult
-from simulation.config import SimulationConfig
 
 
 # TODO - all functions here have REALLY bad performance and it's easy to fix it...
@@ -16,13 +15,14 @@ from simulation.config import SimulationConfig
 
 def _apply_measure(
         experiment_result: ExperimentResult,
-        simulation_config: SimulationConfig,
         measure_for_opinion_list: Callable[[List[float]], float]
 ) -> ndarray:
     results = []
-    for iteration_index in simulation_config.audited_iterations():
+    for iteration_index in range(experiment_result.simulation_configs.num_iterations):
         iteration_spreads = []
         iterations_result = experiment_result.get_iteration_from_all_repetitions(iteration_index)
+        if iterations_result is None:
+            continue
         for iteration_result in iterations_result.values():
             iteration_spreads.append(measure_for_opinion_list(iteration_result.opinions_list))
         results.append(mean(iteration_spreads))
@@ -30,19 +30,19 @@ def _apply_measure(
 
 
 # Bramson et el., 2016 section 2.1
-def spread(experiment_result: ExperimentResult, simulation_config: SimulationConfig) -> ndarray:
-    return _apply_measure(experiment_result, simulation_config, lambda opinions_list: max(opinions_list) - min(opinions_list))
+def spread(experiment_result: ExperimentResult) -> ndarray:
+    return _apply_measure(experiment_result, lambda opinions_list: max(opinions_list) - min(opinions_list))
 
 
 # Bramson et el., 2016 section 2.2
-def dispersion(experiment_result: ExperimentResult, simulation_config: SimulationConfig) -> ndarray:
-    return _apply_measure(experiment_result, simulation_config, lambda opinions_list: var(opinions_list))
+def dispersion(experiment_result: ExperimentResult) -> ndarray:
+    return _apply_measure(experiment_result, lambda opinions_list: var(opinions_list))
 
 
 # Bramson et el., 2016 section 2.3
 # Limitation: the num of bins is arbitrary
-def covered_bins(experiment_result: ExperimentResult, simulation_config: SimulationConfig, num_of_bins: int = 10) -> ndarray:
-    return _apply_measure(experiment_result, simulation_config, lambda opinions_list: np.count_nonzero(np.histogram(opinions_list, num_of_bins)[0] != 0) / num_of_bins)
+def covered_bins(experiment_result: ExperimentResult, num_of_bins: int = 10) -> ndarray:
+    return _apply_measure(experiment_result, lambda opinions_list: np.count_nonzero(np.histogram(opinions_list, num_of_bins)[0] != 0) / num_of_bins)
 
 
 def _num_of_clusters(opinions_list: ndarray, k_range: np.ndarray = None) -> int:
@@ -64,8 +64,8 @@ def _num_of_clusters(opinions_list: ndarray, k_range: np.ndarray = None) -> int:
 
 # Bramson et el., 2016 section 2.4
 # Calculating num of clusters using the elbow method (unsupervised).
-def num_of_clusters(experiment_result: ExperimentResult, simulation_config: SimulationConfig) -> ndarray:
-    return _apply_measure(experiment_result, simulation_config, lambda opinions_list: _num_of_clusters(np.array(opinions_list)))
+def num_of_clusters(experiment_result: ExperimentResult) -> ndarray:
+    return _apply_measure(experiment_result, lambda opinions_list: _num_of_clusters(np.array(opinions_list)))
 
 
 def _num_of_local_extreme_points(opinions_list, num_of_bins=100):
@@ -82,14 +82,14 @@ def _num_of_local_extreme_points(opinions_list, num_of_bins=100):
 # Then, we apply smoothing on the created curve to remove small "jumps" and look for local maxes.
 # A vector is more polarized if it has a small number of peek points, but not 0 or 1.
 # In general (it's not tested by this...) if the peeks are far apart from each other => the dist is more polarized
-def num_of_local_max(experiment_result: ExperimentResult, simulation_config: SimulationConfig) -> ndarray:
-    return _apply_measure(experiment_result, simulation_config, lambda opinions_list: _num_of_local_extreme_points(opinions_list))
+def num_of_local_max(experiment_result: ExperimentResult) -> ndarray:
+    return _apply_measure(experiment_result, lambda opinions_list: _num_of_local_extreme_points(opinions_list))
 
 
 # TODO: I think my entire approach here is incorrect...
 # Take a look: https://stats.stackexchange.com/questions/122668/is-there-a-measure-of-evenness-of-spread
-def ripley_estimator(experiment_result: ExperimentResult, simulation_config: SimulationConfig, radius=0.5, bounding_radius=1) -> ndarray:
-    return _apply_measure(experiment_result, simulation_config, lambda opinions_list: ripleyk.calculate_ripley(radius, bounding_radius, d1=np.arange(0, len(opinions_list)), d2=np.sort(opinions_list)))
+def ripley_estimator(experiment_result: ExperimentResult, radius=0.5, bounding_radius=1) -> ndarray:
+    return _apply_measure(experiment_result, lambda opinions_list: ripleyk.calculate_ripley(radius, bounding_radius, d1=np.arange(0, len(opinions_list)), d2=np.sort(opinions_list)))
 
 
 def _min_removal_for_disconnect(opinions_list: ndarray, disconnect_factor):
@@ -111,5 +111,5 @@ def _min_removal_for_disconnect(opinions_list: ndarray, disconnect_factor):
 
 
 # See note in “Dispersion Point,” 2021; This is Option #1.
-def disconnect_index(experiment_result: ExperimentResult, simulation_config: SimulationConfig, disconnect_factor=0.2):
-    return _apply_measure(experiment_result, simulation_config, lambda opinions_list: len(opinions_list) - len(_min_removal_for_disconnect(sort(opinions_list), disconnect_factor)))
+def disconnect_index(experiment_result: ExperimentResult, disconnect_factor=0.2):
+    return _apply_measure(experiment_result, lambda opinions_list: len(opinions_list) - len(_min_removal_for_disconnect(sort(opinions_list), disconnect_factor)))

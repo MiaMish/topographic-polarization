@@ -15,7 +15,24 @@ def run_around_tests():
 
 
 @pytest.fixture
-def simulation_result() -> ExperimentResult:
+def simulation_conf() -> SimulationConfig:
+    return SimulationConfig(
+        simulation_type=SimulationType.SIMILARITY,
+        num_of_agents=5,
+        num_iterations=5,
+        mio=0.3,
+        num_of_repetitions=2,
+        switch_agent_rate=None,
+        switch_agent_sigma=None,
+        radical_exposure_eta=None,
+        truncate_at=0.001,
+        epsilon=0.4,
+        mark_stubborn_at=0.1,
+        audit_iteration_predicate=lambda iteration_index: True)
+
+
+@pytest.fixture
+def simulation_result(simulation_conf) -> ExperimentResult:
     first_simulation_result = SimulationResult()
     first_simulation_result.add_iteration_result(0, IterationResult([0.156019, 0.374540, 0.598658, 0.731994, 0.950714]))
     first_simulation_result.add_iteration_result(1, IterationResult([0.156019, 0.374540, 0.598658, 0.731994, 0.950714]))
@@ -44,29 +61,12 @@ def simulation_result() -> ExperimentResult:
     fourth_simulation_result.add_iteration_result(3, IterationResult([0.19639, 0.333412, 0.450223, 0.577925, 0.984192]))
     fourth_simulation_result.add_iteration_result(4, IterationResult([0.19639, 0.333412, 0.450223, 0.577925, 0.984192]))
 
-    experiment_result = ExperimentResult()
+    experiment_result = ExperimentResult(simulation_conf)
     experiment_result.add_simulation_result(0, first_simulation_result)
     experiment_result.add_simulation_result(1, second_simulation_result)
     experiment_result.add_simulation_result(2, third_simulation_result)
     experiment_result.add_simulation_result(3, fourth_simulation_result)
     return experiment_result
-
-
-@pytest.fixture
-def simulation_conf() -> SimulationConfig:
-    return SimulationConfig(
-        simulation_type=SimulationType.SIMILARITY,
-        num_of_agents=5,
-        num_iterations=5,
-        mio=0.3,
-        num_of_repetitions=2,
-        switch_agent_rate=None,
-        switch_agent_sigma=None,
-        radical_exposure_eta=None,
-        truncate_at=0.001,
-        epsilon=0.4,
-        mark_stubborn_at=0.1,
-        audit_iteration_predicate=lambda iteration_index: True)
 
 
 def test_spread(simulation_result, simulation_conf):

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from datetime import datetime, timedelta
 from typing import List, Dict
 
 import numpy as np
@@ -24,6 +25,8 @@ class SimulationResult:
     def __init__(self) -> None:
         # TODO: change from dict to pd/np obj for performance
         self.iteration_map: Dict[str, IterationResult] = {}
+        self.timestamp: datetime or None = None
+        self.run_time: timedelta or None = None
 
     def get_results_df(self) -> pd.DataFrame:
         return pd.DataFrame({k: v.get_opinions() for k, v in self.iteration_map.items()}).transpose()

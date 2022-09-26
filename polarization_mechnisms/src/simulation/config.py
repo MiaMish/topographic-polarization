@@ -1,3 +1,4 @@
+import uuid
 from enum import Enum
 from typing import Callable, List
 
@@ -40,13 +41,14 @@ class SimulationConfig:
             mark_stubborn_at: float = DEFAULT_MARK_STUBBORN_AT,
             audit_iteration_predicate: Callable[[int], bool] = lambda iteration_index:
             default_audit_iteration_predicate(iteration_index, DEFAULT_NUM_OF_ITERATIONS),
+            display_name: str or None = None
     ):
         """
 
         :param simulation_type:
         :param num_of_agents:
         :param num_iterations:
-        :param mio: Represents the sensitivity for the opinions of the neighbors.
+        :param mio: Represents The sensitivity for the opinions of the neighbors.
         If mio is big -> the neighbors have more effect on the agent's opinion.
         :param num_of_repetitions:
         :param switch_agent_rate:
@@ -61,8 +63,10 @@ class SimulationConfig:
         :param mark_stubborn_at: Relevant only for type == ASSIMILATION.
         In that flow, if the initial opinion of an agent is not in between [x, 1 - x] it is marked as stubborn.
         Stubborn agents do not change their opinions through the simulation.
-        :param audit_iteration_predicate: determines if iteration is audited
+        :param audit_iteration_predicate: Determines if iteration is audited.
+        :param display_name: Display name for charts, logs, etc.
         """
+        self.config_id = uuid.uuid4()
         self.simulation_type = simulation_type
         self.num_of_agents = num_of_agents
         self.num_iterations = num_iterations
@@ -75,9 +79,11 @@ class SimulationConfig:
         self.epsilon = epsilon
         self.mark_stubborn_at = mark_stubborn_at
         self.audit_iteration_predicate = audit_iteration_predicate
+        self.display_name = display_name
 
     def __str__(self):
         flow_config_str = f"flow_type={self.simulation_type}\n" \
+                          f"display_name={self.display_name}\n" \
                           f"num_of_agents={self.num_of_agents}\n" \
                           f"num_iterations={self.num_iterations}\n" \
                           f"mio={self.mio}\n" \
