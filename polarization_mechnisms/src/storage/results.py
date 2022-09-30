@@ -6,10 +6,12 @@ import uuid
 from typing import Dict
 from uuid import UUID
 
+import pandas as pd
 from numpy import ndarray
 
 import storage.constants as db_constants
 from analyze.measurment import MeasurementType
+from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 from simulation.config import SimulationConfig, SimulationType
 from simulation.result import SimulationResult, IterationResult
@@ -159,3 +161,16 @@ class StoreResults:
             for row in reader:
                 result.add(uuid.UUID(row[db_constants.EXPERIMENT_ID]))
         return result
+
+    def retrieve_measurement_results(self, experiment_id: UUID, measurement_type: MeasurementType) -> MeasurementResult:
+        print(f"Reading from {db_constants.MEASUREMENTS}...")
+        df = pd.read_csv(self.base_path + db_constants.MEASUREMENTS)
+        filtered_df = df[(df[db_constants.EXPERIMENT_ID] == str(experiment_id)) &
+                         (df[db_constants.MEASUREMENT_TYPE] == measurement_type.name)]
+        return MeasurementResult(
+            experiment_id=experiment_id,
+            measurement_type=measurement_type,
+            x=filtered_df[db_constants.X],
+            y=filtered_df[db_constants.VALUE]
+        )
+

@@ -5,6 +5,7 @@ from matplotlib.ticker import MaxNLocator
 from numpy import ndarray
 
 from analyze import measurment
+from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 
 COLORS = ['b', 'c', 'y', 'm', 'r', 'g']
@@ -45,13 +46,20 @@ def visualize_results(experiment_results: List[ExperimentResult]):
     # plt.show()
 
 
+def _colors_generator():
+    i = 0
+    while True:
+        yield COLORS[i % len(COLORS)]
+
+
 def _scatter_plot(experiment_results: List[ExperimentResult], to_plot_func: Callable[[ExperimentResult], ndarray]):
     scattered = []
     names = []
+    colors_iter = _colors_generator()
     for i in range(len(experiment_results)):
         experiment_result = experiment_results[i]
         to_plot = to_plot_func(experiment_result)
-        scattered.append(plt.scatter(range(0, len(to_plot)), to_plot, color=COLORS[i % len(COLORS)]))
+        scattered.append(plt.scatter(range(0, len(to_plot)), to_plot, color=next(colors_iter)))
         names.append(experiment_result.simulation_configs.display_name)
     plt.legend(scattered,
                names,
@@ -60,3 +68,22 @@ def _scatter_plot(experiment_results: List[ExperimentResult], to_plot_func: Call
                ncol=3,
                fontsize=8)
     plt.xlabel("Iteration")
+
+
+def scatter_plot_from_measurements(measurement_results: List[MeasurementResult]):
+    scattered = []
+    names = []
+    colors_iter = _colors_generator()
+    for measurement_result in measurement_results:
+        scattered.append(plt.scatter(measurement_result.x, measurement_result.y, color=next(colors_iter)))
+        names.append(measurement_result.display_name)  # experiment_result.simulation_configs.display_name
+    plt.legend(scattered,
+               names,
+               scatterpoints=1,
+               loc='lower left',
+               ncol=3,
+               fontsize=8)
+    plt.xlabel("Iteration")
+    plt.title(f"{measurement_results[0].measurement_type.name}: {measurement_results[0].measurement_type.description}")
+    plt.ylim([0, 1])
+    plt.show()

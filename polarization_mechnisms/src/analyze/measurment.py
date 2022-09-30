@@ -15,9 +15,13 @@ from experiment.result import ExperimentResult
 
 
 class MeasurementType(Enum):
-    SPREAD = 1
-    DISPERSION = 2
-    COVERED_BINS = 3
+    SPREAD = "Delta Between Max and Min Opinions"
+    DISPERSION = "Variance of Opinions"
+    COVERED_BINS = "% of Covered Deciles"
+    NUM_OF_LOCAL_MAX = "Number of Local Peak Points"
+
+    def __init__(self, description: str):
+        self.description = description
 
 
 def _apply_measure(
