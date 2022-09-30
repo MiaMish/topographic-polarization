@@ -1,76 +1,45 @@
-from typing import List, Callable
+from typing import List
 
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
-from numpy import ndarray
 
-from analyze import measurment
+from analyze.measurement.base import Measurement
+from analyze.measurement.coveredbins import CoveredBinsMeasurement
+from analyze.measurement.disconnect import DisconnectIndexMeasurement
+from analyze.measurement.dispersion import DispersionMeasurement
+from analyze.measurement.peaks import PeaksMeasurement
+from analyze.measurement.spread import SpreadMeasurement
 from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 
 COLORS = ['b', 'c', 'y', 'm', 'r', 'g']
-
-
-def visualize_results(experiment_results: List[ExperimentResult]):
-    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
-
-    _scatter_plot(experiment_results, lambda experiment_result: measurment.spread(experiment_result))
-    plt.title("Spread: Delta Between Max and Min Opinions")
-    plt.ylim([0, 1])
-    plt.show()
-
-    _scatter_plot(experiment_results, lambda experiment_result: measurment.dispersion(experiment_result))
-    plt.title("Dispersion: Variance of Opinions")
-    plt.ylim([0, 1])
-    plt.show()
-
-    _scatter_plot(experiment_results, lambda experiment_result: measurment.covered_bins(experiment_result))
-    plt.title("Covered Bins: % of Covered Deciles")
-    plt.ylim([0, 1])
-    plt.show()
-
-    _scatter_plot(experiment_results, lambda experiment_result: measurment.num_of_local_max(experiment_result))
-    plt.title("Number of Local Peak Points")
-    plt.show()
-
-    _scatter_plot(experiment_results, lambda experiment_result: measurment.disconnect_index(experiment_result))
-    plt.title("Disconnect Index")
-    plt.ylim([0, 1])
-    plt.show()
-
-    # to_plot = measurment.num_of_clusters(experiment_result)
-    # plt.scatter(range(0, len(to_plot)), to_plot)
-    # plt.title("Number of Clusters: Elbow Method for KNN")
-    # plt.suptitle(f"Experiment: {experiment_result.simulation_configs.display_name}")
-    # plt.xlabel("Iteration")
-    # plt.show()
+MEASUREMENTS_TO_VISUALIZE = [
+    SpreadMeasurement(),
+    DispersionMeasurement(),
+    PeaksMeasurement(),
+    CoveredBinsMeasurement(),
+    DisconnectIndexMeasurement()
+]
 
 
 def _colors_generator():
     i = 0
     while True:
         yield COLORS[i % len(COLORS)]
+        i += 1
 
 
-def _scatter_plot(experiment_results: List[ExperimentResult], to_plot_func: Callable[[ExperimentResult], ndarray]):
-    scattered = []
-    names = []
-    colors_iter = _colors_generator()
-    for i in range(len(experiment_results)):
-        experiment_result = experiment_results[i]
-        to_plot = to_plot_func(experiment_result)
-        scattered.append(plt.scatter(range(0, len(to_plot)), to_plot, color=next(colors_iter)))
-        names.append(experiment_result.simulation_configs.display_name)
-    plt.legend(scattered,
-               names,
-               scatterpoints=1,
-               loc='lower left',
-               ncol=3,
-               fontsize=8)
-    plt.xlabel("Iteration")
+def visualize_results(experiment_results: List[ExperimentResult]):
+    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    for measurement in MEASUREMENTS_TO_VISUALIZE:
+        measurement_results = []
+        for experiment_result in experiment_results:
+            measurement_results.append(measurement.apply_measure(experiment_result))
+        scatter_plot_from_measurements(measurement, measurement_results)
 
 
-def scatter_plot_from_measurements(measurement_results: List[MeasurementResult]):
+def scatter_plot_from_measurements(measurement: Measurement, measurement_results: List[MeasurementResult]):
     scattered = []
     names = []
     colors_iter = _colors_generator()
@@ -84,6 +53,8 @@ def scatter_plot_from_measurements(measurement_results: List[MeasurementResult])
                ncol=3,
                fontsize=8)
     plt.xlabel("Iteration")
-    plt.title(f"{measurement_results[0].measurement_type.name}: {measurement_results[0].measurement_type.description}")
-    plt.ylim([0, 1])
+    plt.title(f"{measurement.name}: {measurement.description}")
+    ylim = measurement.ylim()
+    if ylim is not None:
+        plt.ylim([0, 1])
     plt.show()

@@ -7,10 +7,8 @@ from typing import Dict
 from uuid import UUID
 
 import pandas as pd
-from numpy import ndarray
 
 import storage.constants as db_constants
-from analyze.measurment import MeasurementType
 from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 from simulation.config import SimulationConfig, SimulationType
@@ -36,14 +34,13 @@ class StoreResults:
                     writer = csv.writer(csv_file)
                     writer.writerow(table_fields)
 
-    def append_measurement(self, experiment_result: ExperimentResult, measurement: ndarray,
-                           measurement_type: MeasurementType):
+    def append_measurement(self, measurement_result: MeasurementResult):
         print(f"Appending to {db_constants.MEASUREMENTS}...")
         with open(self.base_path + db_constants.MEASUREMENTS, 'a') as csv_file:
             writer = csv.writer(csv_file)
-            writer.writerows(converter.measurement_to_rows(experiment_result, measurement, measurement_type))
+            writer.writerows(converter.measurement_to_rows(measurement_result))
 
-    def append_experiment_result(self, experiment_result: ExperimentResult):
+    def append_experiment_result(self, experiment_result: ExperimentResult, store_iterations_results: bool = True):
         start = datetime.datetime.now()
 
         print(f"Appending to {db_constants.EXPERIMENT_CONFIGS}...")
@@ -61,10 +58,11 @@ class StoreResults:
             writer = csv.writer(csv_file)
             writer.writerows(converter.simulation_results_to_rows(experiment_result))
 
-        print(f"Appending to {db_constants.ITERATION_RESULT}...")
-        with open(self.base_path + db_constants.ITERATION_RESULT, 'a') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerows(converter.iteration_results_to_rows(experiment_result))
+        if store_iterations_results:
+            print(f"Appending to {db_constants.ITERATION_RESULT}...")
+            with open(self.base_path + db_constants.ITERATION_RESULT, 'a') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerows(converter.iteration_results_to_rows(experiment_result))
 
         print(f"Finished appending experiment result with ID {experiment_result.experiment_id} to DB."
               f"Took {(datetime.datetime.now() - start).seconds} seconds.")
@@ -162,15 +160,14 @@ class StoreResults:
                 result.add(uuid.UUID(row[db_constants.EXPERIMENT_ID]))
         return result
 
-    def retrieve_measurement_results(self, experiment_id: UUID, measurement_type: MeasurementType) -> MeasurementResult:
+    def retrieve_measurement_results(self, experiment_id: UUID, measurement_type: str) -> MeasurementResult:
         print(f"Reading from {db_constants.MEASUREMENTS}...")
         df = pd.read_csv(self.base_path + db_constants.MEASUREMENTS)
         filtered_df = df[(df[db_constants.EXPERIMENT_ID] == str(experiment_id)) &
-                         (df[db_constants.MEASUREMENT_TYPE] == measurement_type.name)]
+                         (df[db_constants.MEASUREMENT_TYPE] == measurement_type)]
         return MeasurementResult(
             experiment_id=experiment_id,
             measurement_type=measurement_type,
             x=filtered_df[db_constants.X],
             y=filtered_df[db_constants.VALUE]
         )
-

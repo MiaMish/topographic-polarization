@@ -2,12 +2,10 @@ from uuid import UUID
 
 from numpy import ndarray
 
-from analyze.measurment import MeasurementType
-
 
 class MeasurementResult:
 
-    def __init__(self, y: ndarray, x: ndarray, experiment_id: UUID, measurement_type: MeasurementType,
+    def __init__(self, y: ndarray, x: ndarray, experiment_id: UUID, measurement_type: str,
                  display_name: str or None = None) -> None:
         self.y = y
         self.x = x

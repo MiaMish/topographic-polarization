@@ -1,8 +1,5 @@
 import json
-
-from numpy import ndarray
-
-from analyze.measurment import MeasurementType
+from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 from simulation.config import SimulationConfig
 
@@ -57,11 +54,11 @@ def experiment_config_to_row(simulation_config: SimulationConfig):
     return experiment_config_row
 
 
-def measurement_to_rows(experiment_result: ExperimentResult, measurement: ndarray, measurement_type: MeasurementType):
-    for i in range(len(measurement)):
+def measurement_to_rows(measurement_result: MeasurementResult):
+    for i in range(len(measurement_result.y)):
         yield [
-            experiment_result.experiment_id,
-            measurement_type.name,
-            i,
-            measurement[i]
+            measurement_result.experiment_id,
+            measurement_result.measurement_type,
+            measurement_result.x[i],
+            measurement_result.y[i]
         ]

@@ -2,7 +2,13 @@ import numpy as np
 import numpy.testing
 import pytest
 
-from analyze import measurment
+from analyze.measurement.clusterscount import ClustersCountMeasurement
+from analyze.measurement.coveredbins import CoveredBinsMeasurement
+from analyze.measurement.disconnect import DisconnectIndexMeasurement
+from analyze.measurement.dispersion import DispersionMeasurement
+from analyze.measurement.peaks import PeaksMeasurement
+from analyze.measurement.ripley import RipleyEstimatorMeasurement
+from analyze.measurement.spread import SpreadMeasurement
 from experiment.result import ExperimentResult
 from simulation.config import SimulationConfig, SimulationType
 from simulation.result import SimulationResult, IterationResult
@@ -70,72 +76,72 @@ def simulation_result(simulation_conf) -> ExperimentResult:
 
 
 def test_spread(simulation_result, simulation_conf):
-    actual = measurment.spread(simulation_result, simulation_conf)
+    actual = SpreadMeasurement().apply_measure(simulation_result)
     expected = np.array([0.66428925, 0.64754925, 0.633003, 0.6271845, 0.60320625])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
           f"{actual}")
-    numpy.testing.assert_almost_equal(actual, expected)
+    numpy.testing.assert_almost_equal(actual.y, expected)
     #     plt.plot(spreads)
     #     plt.show()
 
 
 def test_dispersion(simulation_result, simulation_conf):
-    actual = measurment.dispersion(simulation_result, simulation_conf)
+    actual = DispersionMeasurement().apply_measure(simulation_result)
     expected = np.array([0.0603636, 0.05890159, 0.05597123, 0.0531616, 0.05101511])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
           f"{actual}")
-    numpy.testing.assert_almost_equal(actual, expected)
+    numpy.testing.assert_almost_equal(actual.y, expected)
 
 
 def test_covered_bins(simulation_result, simulation_conf):
-    actual = measurment.covered_bins(simulation_result, simulation_conf)
+    actual = CoveredBinsMeasurement().apply_measure(simulation_result)
     expected = np.array([0.45, 0.45, 0.45, 0.4, 0.4 ])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
           f"{actual}")
-    numpy.testing.assert_almost_equal(actual, expected)
+    numpy.testing.assert_almost_equal(actual.y, expected)
 
 
 def test_num_of_clusters(simulation_result, simulation_conf):
-    actual = measurment.num_of_clusters(simulation_result, simulation_conf)
+    actual = ClustersCountMeasurement().apply_measure(simulation_result)
     expected = np.array([2, 2, 2, 2.25, 2.25])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
           f"{actual}")
-    numpy.testing.assert_almost_equal(actual, expected)
+    numpy.testing.assert_almost_equal(actual.y, expected)
 
 
 def test_num_of_local_max(simulation_result, simulation_conf):
-    actual = measurment.num_of_local_max(simulation_result, simulation_conf)
+    actual = PeaksMeasurement().apply_measure(simulation_result)
     expected = np.array([2, 2, 2, 2, 2])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
           f"{actual}")
-    numpy.testing.assert_almost_equal(actual, expected)
+    numpy.testing.assert_almost_equal(actual.y, expected)
 
 
 def test_ripley_estimator(simulation_result, simulation_conf):
-    actual = measurment.ripley_estimator(simulation_result, simulation_conf)
+    actual = RipleyEstimatorMeasurement().apply_measure(simulation_result)
     expected = np.array([0, 0, 0, 0, 0])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
           f"{actual}")
-    numpy.testing.assert_almost_equal(actual, expected)
+    numpy.testing.assert_almost_equal(actual.y, expected)
 
 
 def test_disconnect_index(simulation_result, simulation_conf):
-    actual = measurment.disconnect_index(simulation_result, simulation_conf, disconnect_factor=0.001)
+    actual = DisconnectIndexMeasurement(disconnect_factor=0.001).apply_measure(simulation_result)
     expected = np.array([3, 4, 4, 4, 4])
     print(f"Expected:\n"
           f"{expected}\n"
           f"Actual\n"
           f"{actual}")
-    numpy.testing.assert_almost_equal(actual, expected)
+    numpy.testing.assert_almost_equal(actual.y, expected)
