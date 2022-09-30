@@ -1,3 +1,6 @@
 config_id,simulation_type,num_of_agents,num_iterations,mio,num_of_repetitions,switch_agent_rate,switch_agent_sigma,radical_exposure_eta,truncate_at,epsilon,mark_stubborn_at,display_name
-4c834bc8-4b52-40f5-8f55-3d3920f67f13,SIMILARITY,100,1000,0.3,10,,,,0.001,0.1,0.1,Epsilon = 0.1
-dcace793-79d4-4c52-9c3b-fd286f138537,SIMILARITY,100,1000,0.3,10,,,,0.001,0.4,0.1,Epsilon = 0.4
+ca3c4df9-0df4-4ee9-b76e-8028b8cbf828,SIMILARITY,100,1000,0.3,20,,,,0.001,0.0,0.1,Epsilon = 0.0
+c6de7940-f90a-4947-b4a3-ff075bd61ec4,SIMILARITY,100,1000,0.3,20,,,,0.001,0.1,0.1,Epsilon = 0.1
+67800ec1-9d35-485d-820c-fa30226102fc,SIMILARITY,100,1000,0.3,20,,,,0.001,0.2,0.1,Epsilon = 0.2
+1fd8418f-bb94-4303-9bbe-6fd8a986f965,SIMILARITY,100,1000,0.3,20,,,,0.001,0.30000000000000004,0.1,Epsilon = 0.30000000000000004
+63c08aa2-5f13-4bb9-923e-09a650639fd3,SIMILARITY,100,1000,0.3,20,,,,0.001,0.4,0.1,Epsilon = 0.4
