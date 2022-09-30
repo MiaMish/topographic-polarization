@@ -32,7 +32,7 @@ class Measurement(ABC):
                 continue
             x.append(iteration_index)
             for iteration_result in iterations_result.values():
-                iteration_spreads.append(measure_for_opinion_list(iteration_result.opinions_list))
+                iteration_spreads.append(measure_for_opinion_list(iteration_result.get_opinions().tolist()))
             results.append(mean(iteration_spreads))
         return MeasurementResult(
             y=np.array(results, dtype=float),

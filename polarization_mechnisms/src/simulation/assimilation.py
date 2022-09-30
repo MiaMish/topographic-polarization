@@ -1,6 +1,7 @@
 from typing import List, Dict
 
-from numpy import random
+import numpy as np
+from numpy import random, ndarray
 
 from simulation.config import SimulationConfig
 from simulation.simulation import Simulation
@@ -58,5 +59,5 @@ class AssimilationSimulation(Simulation):
                   f"self.weights_dict[f'{agent}']={self.weights_dict[f'{agent}']}")
         return agent_opinion + self.simulation_config.mio * exposure_normalizer_coefficient * neighbors_cumulative_effect
 
-    def _update_opinions(self, agent_i, agent_j):
-        return [self._update_single_opinion(i) for i in range(self.simulation_config.num_of_agents)]
+    def _update_opinions(self, agent_i, agent_j) -> ndarray:
+        return np.array([self._update_single_opinion(i) for i in range(self.simulation_config.num_of_agents)])

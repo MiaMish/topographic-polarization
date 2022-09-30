@@ -1,9 +1,8 @@
 import datetime
 from abc import abstractmethod, ABC
-from typing import List
 
 import numpy as np
-from numpy import random, abs
+from numpy import random, abs, ndarray
 
 from simulation.config import SimulationConfig
 from simulation.result import IterationResult, SimulationResult
@@ -16,10 +15,10 @@ class Simulation(ABC):
             simulation_config: SimulationConfig
     ):
         self.simulation_config = simulation_config
-        self.opinions_list = self._init_opinion_list()
+        self.opinions_list: ndarray = self._init_opinion_list()
 
-    def _init_opinion_list(self) -> List[float]:
-        return [random.uniform(0.0, 1.0) for _ in range(0, self.simulation_config.num_of_agents)]
+    def _init_opinion_list(self) -> ndarray:
+        return random.uniform(0.0, 1.0, self.simulation_config.num_of_agents)
 
     def _should_switch_agents(self) -> bool:
         if self.simulation_config.switch_agent_rate is None:
@@ -58,5 +57,5 @@ class Simulation(ABC):
         return results
 
     @abstractmethod
-    def _update_opinions(self, agent_i: int, agent_j: int) -> List[float]:
+    def _update_opinions(self, agent_i: int, agent_j: int) -> ndarray:
         pass

@@ -21,7 +21,7 @@ def iteration_results_to_rows(experiment_result: ExperimentResult):
                 experiment_result.experiment_id,
                 repetition,
                 iteration,
-                json.dumps(iteration_result.opinions_list)
+                json.dumps(iteration_result.get_opinions().tolist())
             ]
 
 

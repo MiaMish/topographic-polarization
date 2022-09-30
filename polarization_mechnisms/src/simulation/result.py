@@ -1,6 +1,5 @@
-from copy import deepcopy
 from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -9,9 +8,9 @@ from numpy import ndarray
 
 class IterationResult:
 
-    def __init__(self, opinions_list: List[float]) -> None:
+    def __init__(self, opinions_list: ndarray) -> None:
         # TODO: change from dict to pd/np obj for performance
-        self.opinions_list = sorted(deepcopy(opinions_list))
+        self.opinions_list = np.sort(opinions_list)
 
     def get_opinions(self) -> ndarray:
         return np.array(self.opinions_list)
