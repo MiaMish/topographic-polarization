@@ -40,7 +40,7 @@ class StoreResults:
             writer = csv.writer(csv_file)
             writer.writerows(converter.measurement_to_rows(measurement_result))
 
-    def append_experiment_result(self, experiment_result: ExperimentResult, store_iterations_results: bool = True):
+    def append_experiment_result(self, experiment_result: ExperimentResult, store_actual_results: bool = True):
         start = datetime.datetime.now()
 
         print(f"Appending to {db_constants.EXPERIMENT_CONFIGS}...")
@@ -53,12 +53,12 @@ class StoreResults:
             writer = csv.writer(csv_file)
             writer.writerow(converter.experiment_results_to_row(experiment_result))
 
-        print(f"Appending to {db_constants.SIMULATION_RESULT}...")
-        with open(self.base_path + db_constants.SIMULATION_RESULT, 'a') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerows(converter.simulation_results_to_rows(experiment_result))
+        if store_actual_results:
+            print(f"Appending to {db_constants.SIMULATION_RESULT}...")
+            with open(self.base_path + db_constants.SIMULATION_RESULT, 'a') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerows(converter.simulation_results_to_rows(experiment_result))
 
-        if store_iterations_results:
             print(f"Appending to {db_constants.ITERATION_RESULT}...")
             with open(self.base_path + db_constants.ITERATION_RESULT, 'a') as csv_file:
                 writer = csv.writer(csv_file)
