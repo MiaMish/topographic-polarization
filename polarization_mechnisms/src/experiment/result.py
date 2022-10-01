@@ -30,3 +30,8 @@ class ExperimentResult:
                 return None
             result[repetition] = self.get_simulation_result_at(int(repetition)).get_iteration(iteration_index)
         return result
+
+    def __str__(self) -> str:
+        return f"experiment_id={self.experiment_id}\n" \
+               f"timestamp={self.timestamp}\n" \
+               f"run_time={self.run_time}"

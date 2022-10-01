@@ -46,7 +46,7 @@ class StoreResults:
             writer = csv.writer(csv_file)
             writer.writerows(converter.measurement_to_rows(measurement_result))
         logging.info(f"Finished appending measurement with type {measurement_result.measurement_type} "
-                     f"for experiment ID {measurement_result.experiment_id} to DB."
+                     f"for experiment ID {measurement_result.experiment_id} to DB. "
                      f"Took {(datetime.datetime.now() - start).seconds} seconds.")
 
     def append_experiment_result(self, experiment_result: ExperimentResult, store_actual_results: bool = True):
@@ -73,7 +73,7 @@ class StoreResults:
                 writer = csv.writer(csv_file)
                 writer.writerows(converter.iteration_results_to_rows(experiment_result))
 
-        logging.info(f"Finished appending experiment result with ID {experiment_result.experiment_id} to DB."
+        logging.info(f"Finished appending experiment result with ID {experiment_result.experiment_id} to DB. "
                      f"Took {(datetime.datetime.now() - start).seconds} seconds.")
 
     def retrieve_configuration(self, config_id: UUID) -> SimulationConfig or None:

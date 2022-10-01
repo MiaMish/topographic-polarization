@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from tqdm import tqdm
 
@@ -21,4 +22,5 @@ class Experiment:
             simulation_result = simulation.run_simulation()
             experiment_result.add_simulation_result(i, simulation_result)
         experiment_result.run_time = datetime.datetime.now() - experiment_result.timestamp
+        logging.info(f"Experiment finished. {experiment_result}")
         return experiment_result

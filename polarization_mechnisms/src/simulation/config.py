@@ -87,7 +87,7 @@ class SimulationConfig:
                           f"num_of_agents={self.num_of_agents}\n" \
                           f"num_iterations={self.num_iterations}\n" \
                           f"mio={self.mio}\n" \
-                          f"num_of_repetitions={self.num_of_repetitions}" \
+                          f"num_of_repetitions={self.num_of_repetitions}\n" \
                           f"switch_agent_rate={self.switch_agent_rate}\n" \
                           f"switch_agent_sigma={self.switch_agent_sigma}\n" \
                           f"radical_exposure_eta={self.radical_exposure_eta}\n" \
