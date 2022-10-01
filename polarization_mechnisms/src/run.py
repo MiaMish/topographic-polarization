@@ -81,7 +81,7 @@ def run_using_conf(config_index):
 
 if __name__ == '__main__':
     config_loger(False)
-    configs_to_run = configs_to_run()
+    configs_list_to_run = configs_to_run()
     with concurrent.futures.ProcessPoolExecutor(max_workers=12) as executor:
-        for config_index_finished in executor.map(run_using_conf, range(0, len(configs_to_run))):
+        for config_index_finished in executor.map(run_using_conf, range(0, len(configs_list_to_run))):
             logging.info(f"Finished config_index={config_index_finished} flow")
