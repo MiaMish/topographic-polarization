@@ -5,9 +5,7 @@ from matplotlib.ticker import MaxNLocator
 
 from analyze.measurement.base import Measurement
 from analyze.measurement.coveredbins import CoveredBinsMeasurement
-from analyze.measurement.disconnect import DisconnectIndexMeasurement
 from analyze.measurement.dispersion import DispersionMeasurement
-from analyze.measurement.peaks import PeaksMeasurement
 from analyze.measurement.spread import SpreadMeasurement
 from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
@@ -16,9 +14,9 @@ COLORS = ['b', 'c', 'y', 'm', 'r', 'g']
 MEASUREMENTS_TO_VISUALIZE = [
     SpreadMeasurement(),
     DispersionMeasurement(),
-    PeaksMeasurement(),
+    # PeaksMeasurement(),
     CoveredBinsMeasurement(),
-    DisconnectIndexMeasurement()
+    # DisconnectIndexMeasurement()
 ]
 
 

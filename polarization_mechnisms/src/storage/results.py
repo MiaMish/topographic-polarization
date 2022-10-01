@@ -1,8 +1,10 @@
 import csv
 import datetime
 import json
+import logging
 import os
 import uuid
+from pathlib import Path
 from typing import Dict
 from uuid import UUID
 
@@ -26,49 +28,56 @@ class StoreResults:
         self.base_path = base_path
 
     def bootstrap_db_files(self, force: bool = False) -> None:
-        print(f"Bootstrapping DB in {self.base_path}")
+        logging.info(f"Bootstrapping DB in {self.base_path}")
         for table_name, table_fields in db_constants.TABLES.items():
             if force or not os.path.isfile(self.base_path + table_name):
-                print(f"Bootstrapping {table_name}...")
+                logging.info(f"Bootstrapping {table_name}...")
                 with open(self.base_path + table_name, 'w') as csv_file:
                     writer = csv.writer(csv_file)
                     writer.writerow(table_fields)
 
     def append_measurement(self, measurement_result: MeasurementResult):
-        print(f"Appending to {db_constants.MEASUREMENTS}...")
-        with open(self.base_path + db_constants.MEASUREMENTS, 'a') as csv_file:
+        logging.debug(f"Appending to {db_constants.MEASUREMENTS}...")
+        start = datetime.datetime.now()
+        Path(self.base_path + self._partition_prefix(measurement_result.experiment_id)).mkdir(parents=True,
+                                                                                              exist_ok=True)
+        with open(self.base_path + self._partition_prefix(measurement_result.experiment_id) + db_constants.MEASUREMENTS,
+                  'a') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerows(converter.measurement_to_rows(measurement_result))
+        logging.info(f"Finished appending measurement with type {measurement_result.measurement_type} "
+                     f"for experiment ID {measurement_result.experiment_id} to DB."
+                     f"Took {(datetime.datetime.now() - start).seconds} seconds.")
 
     def append_experiment_result(self, experiment_result: ExperimentResult, store_actual_results: bool = True):
         start = datetime.datetime.now()
 
-        print(f"Appending to {db_constants.EXPERIMENT_CONFIGS}...")
+        logging.debug(f"Appending to {db_constants.EXPERIMENT_CONFIGS}...")
         with open(self.base_path + db_constants.EXPERIMENT_CONFIGS, 'a') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(converter.experiment_config_to_row(experiment_result.simulation_configs))
 
-        print(f"Appending to {db_constants.EXPERIMENT_RESULT}...")
+        logging.debug(f"Appending to {db_constants.EXPERIMENT_RESULT}...")
         with open(self.base_path + db_constants.EXPERIMENT_RESULT, 'a') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(converter.experiment_results_to_row(experiment_result))
 
         if store_actual_results:
-            print(f"Appending to {db_constants.SIMULATION_RESULT}...")
+            logging.debug(f"Appending to {db_constants.SIMULATION_RESULT}...")
             with open(self.base_path + db_constants.SIMULATION_RESULT, 'a') as csv_file:
                 writer = csv.writer(csv_file)
                 writer.writerows(converter.simulation_results_to_rows(experiment_result))
 
-            print(f"Appending to {db_constants.ITERATION_RESULT}...")
+            logging.debug(f"Appending to {db_constants.ITERATION_RESULT}...")
             with open(self.base_path + db_constants.ITERATION_RESULT, 'a') as csv_file:
                 writer = csv.writer(csv_file)
                 writer.writerows(converter.iteration_results_to_rows(experiment_result))
 
-        print(f"Finished appending experiment result with ID {experiment_result.experiment_id} to DB."
-              f"Took {(datetime.datetime.now() - start).seconds} seconds.")
+        logging.info(f"Finished appending experiment result with ID {experiment_result.experiment_id} to DB."
+                     f"Took {(datetime.datetime.now() - start).seconds} seconds.")
 
     def retrieve_configuration(self, config_id: UUID) -> SimulationConfig or None:
-        print(f"Reading from {db_constants.EXPERIMENT_CONFIGS}...")
+        logging.debug(f"Reading from {db_constants.EXPERIMENT_CONFIGS}...")
         with open(self.base_path + db_constants.EXPERIMENT_CONFIGS, 'r') as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
@@ -96,7 +105,7 @@ class StoreResults:
         return None
 
     def retrieve_iteration_results(self, experiment_id: UUID, repetition: int) -> Dict[str, IterationResult]:
-        print(f"Reading from {db_constants.ITERATION_RESULT}...")
+        logging.debug(f"Reading from {db_constants.ITERATION_RESULT}...")
         iteration_results = {}
         with open(self.base_path + db_constants.ITERATION_RESULT, 'r') as csv_file:
             reader = csv.DictReader(csv_file)
@@ -113,7 +122,7 @@ class StoreResults:
         return iteration_results
 
     def retrieve_simulation_result(self, experiment_id: UUID, repetition: int) -> SimulationResult or None:
-        print(f"Reading from {db_constants.SIMULATION_RESULT}...")
+        logging.debug(f"Reading from {db_constants.SIMULATION_RESULT}...")
         with open(self.base_path + db_constants.SIMULATION_RESULT, 'r') as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
@@ -128,7 +137,7 @@ class StoreResults:
         return None
 
     def retrieve_experiment_results(self, experiment_id: UUID) -> ExperimentResult or None:
-        print(f"Reading from {db_constants.EXPERIMENT_RESULT}...")
+        logging.debug(f"Reading from {db_constants.EXPERIMENT_RESULT}...")
         with open(self.base_path + db_constants.EXPERIMENT_RESULT, 'r') as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
@@ -153,7 +162,7 @@ class StoreResults:
 
     def retrieve_experiment_ids(self) -> set[UUID]:
         result = set()
-        print(f"Reading from {db_constants.EXPERIMENT_RESULT}...")
+        logging.debug(f"Reading from {db_constants.EXPERIMENT_RESULT}...")
         with open(self.base_path + db_constants.EXPERIMENT_RESULT, 'r') as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
@@ -161,8 +170,9 @@ class StoreResults:
         return result
 
     def retrieve_measurement_results(self, experiment_id: UUID, measurement_type: str) -> MeasurementResult:
-        print(f"Reading from {db_constants.MEASUREMENTS}...")
-        df = pd.read_csv(self.base_path + db_constants.MEASUREMENTS)
+        logging.debug(f"Reading from {db_constants.MEASUREMENTS}...")
+        Path(self.base_path + self._partition_prefix(experiment_id)).mkdir(parents=True, exist_ok=True)
+        df = pd.read_csv(self.base_path + self._partition_prefix(experiment_id) + db_constants.MEASUREMENTS)
         filtered_df = df[(df[db_constants.EXPERIMENT_ID] == str(experiment_id)) &
                          (df[db_constants.MEASUREMENT_TYPE] == measurement_type)]
         return MeasurementResult(
@@ -171,3 +181,7 @@ class StoreResults:
             x=filtered_df[db_constants.X],
             y=filtered_df[db_constants.VALUE]
         )
+
+    @staticmethod
+    def _partition_prefix(id_for_partition: UUID) -> str:
+        return f"{id_for_partition.hex[0]}/{id_for_partition.hex[1]}/"
