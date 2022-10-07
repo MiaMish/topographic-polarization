@@ -9,7 +9,7 @@ from typing import Dict
 from uuid import UUID
 
 import pandas as pd
-
+import shutil
 import storage.constants as db_constants
 from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
@@ -27,8 +27,16 @@ class StoreResults:
     def __init__(self, base_path: str) -> None:
         self.base_path = base_path
 
+    def clear_db(self):
+        logging.info(f"Clearing DB from: {self.base_path}")
+        try:
+            shutil.rmtree(self.base_path)
+        except FileNotFoundError:
+            logging.info("Nothing to delete, DB is already clear.")
+
     def bootstrap_db_files(self, force: bool = False) -> None:
         logging.info(f"Bootstrapping DB in {self.base_path}")
+        Path(self.base_path).mkdir(parents=True, exist_ok=True)
         for table_name, table_fields in db_constants.TABLES.items():
             if table_name == db_constants.MEASUREMENTS:
                 continue

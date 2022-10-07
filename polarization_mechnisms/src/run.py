@@ -3,7 +3,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-
+import copy
 from experiment.experiment import Experiment
 from simulation.config import SimulationConfig, SimulationType
 from storage.results import StoreResults
@@ -37,7 +37,7 @@ def x(configs, to_apply, variation_list_to_apply):
     new_configs = []
     for config in configs:
         for variation in variation_list_to_apply:
-            variation_to_append = to_apply(config, variation)
+            variation_to_append = to_apply(copy.deepcopy(config), variation)
             new_configs.append(variation_to_append)
     return new_configs
 
@@ -138,7 +138,9 @@ def run_using_conf(config_index):
 
 if __name__ == '__main__':
     config_loger(False, use_log_file=USE_LOG_FILE)
-    StoreResults(BASE_DB_PATH).bootstrap_db_files()
+    storage_result = StoreResults(BASE_DB_PATH)
+    storage_result.clear_db()
+    storage_result.bootstrap_db_files()
     configs_list_to_run = configs_to_run()
     logging.info(f"Stating to run {len(configs_list_to_run)} configs using {MAX_WORKERS} workers.")
     with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
