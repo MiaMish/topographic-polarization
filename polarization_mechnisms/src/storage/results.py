@@ -30,17 +30,28 @@ class StoreResults:
     def bootstrap_db_files(self, force: bool = False) -> None:
         logging.info(f"Bootstrapping DB in {self.base_path}")
         for table_name, table_fields in db_constants.TABLES.items():
+            if table_name == db_constants.MEASUREMENTS:
+                continue
             if force or not os.path.isfile(self.base_path + table_name):
                 logging.info(f"Bootstrapping {table_name}...")
                 with open(self.base_path + table_name, 'w') as csv_file:
                     writer = csv.writer(csv_file)
                     writer.writerow(table_fields)
 
+    def bootstrap_measurement_file_if_needed(self, measurement_result):
+        Path(self.base_path + self._partition_prefix(measurement_result.experiment_id)).mkdir(parents=True,
+                                                                                              exist_ok=True)
+        if not os.path.isfile(
+                self.base_path + self._partition_prefix(measurement_result.experiment_id) + db_constants.MEASUREMENTS):
+            with open(self.base_path + self._partition_prefix(
+                    measurement_result.experiment_id) + db_constants.MEASUREMENTS, 'w') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow(db_constants.TABLES[db_constants.MEASUREMENTS])
+
     def append_measurement(self, measurement_result: MeasurementResult):
         logging.debug(f"Appending to {db_constants.MEASUREMENTS}...")
         start = datetime.datetime.now()
-        Path(self.base_path + self._partition_prefix(measurement_result.experiment_id)).mkdir(parents=True,
-                                                                                              exist_ok=True)
+        self.bootstrap_measurement_file_if_needed(measurement_result)
         with open(self.base_path + self._partition_prefix(measurement_result.experiment_id) + db_constants.MEASUREMENTS,
                   'a') as csv_file:
             writer = csv.writer(csv_file)
