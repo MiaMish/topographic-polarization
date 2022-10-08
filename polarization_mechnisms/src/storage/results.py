@@ -22,8 +22,24 @@ class DataCorruption(Exception):
 
 class StoreResults:
 
+    __instance = None
+
+    @staticmethod
+    def instance():
+        if StoreResults.__instance is None:
+            raise Exception("Not initialized!")
+        return StoreResults.__instance
+
+    @staticmethod
+    def init(base_path: str):
+        StoreResults(base_path)
+
     def __init__(self, base_path: str) -> None:
         self.base_path = base_path
+        if StoreResults.__instance is not None:
+            raise Exception("Already initialized!")
+        else:
+            StoreResults.__instance = self
 
     def clear_db(self):
         logging.info(f"Clearing DB from: {self.base_path}")
