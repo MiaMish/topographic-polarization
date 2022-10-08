@@ -16,7 +16,7 @@ from visualize.visualize import MEASUREMENTS_TO_VISUALIZE
 
 BASE_LOG_PATH = f"{os.getcwd()}/../logs/"
 BASE_DB_PATH = f"{os.getcwd()}/../resources/database/"
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 MAX_WORKERS = 12
 USE_LOG_FILE = False
 
@@ -152,3 +152,4 @@ if __name__ == '__main__':
             storage_result.append_measurements(finished_results.experiment_id, finished_measurement_results)
             storage_result.append_experiment_result(finished_results, store_actual_results=False)
             storage_result.update_config_run_status(finished_conf.config_id, RunStatus.SUCCESS)
+    logging.info(f"Finished!")

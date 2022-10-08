@@ -54,15 +54,13 @@ class StoreResults:
         self.bootstrap_measurement_file_if_needed(experiment_id)
         directory_path = self.base_path + self._partition_prefix(experiment_id)
         existing_df = pd.read_csv(directory_path + db_constants.MEASUREMENTS, na_values=['NULL'])
-        existing_df.append(converter.measurements_to_df(measurement_results), ignore_index=True)
+        existing_df = existing_df.append(converter.measurements_to_df(measurement_results), ignore_index=True)
         existing_df.to_csv(directory_path + db_constants.MEASUREMENTS, index=False, na_rep='NULL')
 
     def append_experiment_result(self, experiment_result: ExperimentResult, store_actual_results: bool = True):
-        start = datetime.datetime.now()
-
         logging.debug(f"Appending to {db_constants.EXPERIMENT_RESULT}...")
         existing_df = pd.read_csv(self.base_path + db_constants.EXPERIMENT_RESULT, na_values=['NULL'])
-        existing_df.append(converter.experiment_results_to_df(experiment_result), ignore_index=True)
+        existing_df = existing_df.append(converter.experiment_results_to_df(experiment_result), ignore_index=True)
         existing_df.to_csv(self.base_path + db_constants.EXPERIMENT_RESULT, index=False, na_rep='NULL')
 
         # if store_actual_results:

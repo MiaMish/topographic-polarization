@@ -75,7 +75,7 @@ def measurements_to_df(measurement_results: List[MeasurementResult]) -> DataFram
         db_constants.VALUE: []
     })
     for measurement_result in measurement_results:
-        df.append(pd.DataFrame(data={
+        df = df.append(pd.DataFrame(data={
             db_constants.EXPERIMENT_ID: [measurement_result.experiment_id] * len(measurement_result.y),
             db_constants.MEASUREMENT_TYPE: [measurement_result.measurement_type] * len(measurement_result.y),
             db_constants.X: measurement_result.x,
