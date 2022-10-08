@@ -31,7 +31,7 @@ def get_vanilla_similarity_conf():
         truncate_at=0.0001,
         epsilon=0.1,
         mark_stubborn_at=0.1,
-        audit_iteration_every=2,
+        audit_iteration_every=None,
         display_name="Epsilon = 0.1")
 
 

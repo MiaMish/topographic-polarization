@@ -1,3 +1,4 @@
+import math
 import uuid
 from enum import Enum
 from typing import List
@@ -39,7 +40,7 @@ class SimulationConfig:
             truncate_at: float = DEFAULT_TRUNCATE_AT,
             epsilon: float = DEFAULT_EPSILON,
             mark_stubborn_at: float = DEFAULT_MARK_STUBBORN_AT,
-            audit_iteration_every: int = 30,
+            audit_iteration_every: int or None = 30,
             display_name: str or None = None,
             config_id: str or None = None,
     ):
@@ -79,7 +80,7 @@ class SimulationConfig:
         self.truncate_at = truncate_at
         self.epsilon = epsilon
         self.mark_stubborn_at = mark_stubborn_at
-        self.audit_iteration_every = audit_iteration_every
+        self.audit_iteration_every = SimulationConfig._default_audit_every_val(num_iterations) if audit_iteration_every is None else audit_iteration_every
         self.display_name = display_name
 
     def __str__(self):
@@ -96,6 +97,12 @@ class SimulationConfig:
                           f"epsilon={self.epsilon}\n" \
                           f"mark_stubborn_at={self.mark_stubborn_at}\n"
         return flow_config_str
+
+    @staticmethod
+    def _default_audit_every_val(num_iterations):
+        if num_iterations <= 100:
+            return 2
+        return max(5, math.ceil(num_iterations / 400))
 
     def should_audit_iteration(self, iteration_num):
         return iteration_num == 1 or (iteration_num + 1) % self.audit_iteration_every == 0 or (iteration_num - 1) == self.num_iterations
