@@ -33,6 +33,7 @@ class StoreResults:
     @staticmethod
     def init(base_path: str):
         StoreResults(base_path)
+        logging.info(f"Initialized DB instance for path: {base_path}")
 
     def __init__(self, base_path: str) -> None:
         self.base_path = base_path
@@ -47,6 +48,7 @@ class StoreResults:
             shutil.rmtree(self.base_path)
         except FileNotFoundError:
             logging.info("Nothing to delete, DB is already clear.")
+        logging.info(f"DB is cleared from {self.base_path}")
 
     def bootstrap_db_files(self, force: bool = False) -> None:
         logging.info(f"Bootstrapping DB in {self.base_path}")
@@ -57,6 +59,7 @@ class StoreResults:
             if force or not os.path.isfile(self.base_path + table_name):
                 logging.info(f"Bootstrapping {table_name}...")
                 pd.DataFrame(data={table_field: [] for table_field in table_fields}).to_csv(self.base_path + table_name, index=False, na_rep='NULL')
+        logging.info(f"DB is bootstrapped in {self.base_path}")
 
     def bootstrap_measurement_file_if_needed(self, experiment_id: UUID):
         directory_path = self.base_path + self._partition_prefix(experiment_id)
@@ -66,7 +69,6 @@ class StoreResults:
                 .to_csv(directory_path + db_constants.MEASUREMENTS, index=False, na_rep='NULL')
 
     def append_measurements(self, experiment_id: UUID, measurement_results: List[MeasurementResult]):
-        logging.debug(f"Appending to {db_constants.MEASUREMENTS}...")
         self.bootstrap_measurement_file_if_needed(experiment_id)
         directory_path = self.base_path + self._partition_prefix(experiment_id)
         existing_df = pd.read_csv(directory_path + db_constants.MEASUREMENTS, na_values=['NULL'])
@@ -74,7 +76,6 @@ class StoreResults:
         existing_df.to_csv(directory_path + db_constants.MEASUREMENTS, index=False, na_rep='NULL')
 
     def append_experiment_result(self, experiment_result: ExperimentResult, store_actual_results: bool = True):
-        logging.debug(f"Appending to {db_constants.EXPERIMENT_RESULT}...")
         existing_df = pd.read_csv(self.base_path + db_constants.EXPERIMENT_RESULT, na_values=['NULL'])
         existing_df = existing_df.append(converter.experiment_results_to_df(experiment_result), ignore_index=True)
         existing_df.to_csv(self.base_path + db_constants.EXPERIMENT_RESULT, index=False, na_rep='NULL')
@@ -91,7 +92,6 @@ class StoreResults:
         #         writer.writerows(converter.iteration_results_to_rows(experiment_result))
 
     def retrieve_configuration(self, config_id: UUID) -> SimulationConfig or None:
-        logging.debug(f"Reading from {db_constants.EXPERIMENT_CONFIGS}...")
         from_db = pd.read_csv(self.base_path + db_constants.EXPERIMENT_CONFIGS, na_values=['NULL'])
         filtered_df = from_db[from_db[db_constants.CONFIG_ID] == str(config_id)]
         if filtered_df.shape[0] == 0:
@@ -192,9 +192,7 @@ class StoreResults:
 
     def get_configs_to_run(self, limit: int = 5000) -> List[SimulationConfig]:
         from_db = pd.read_csv(self.base_path + db_constants.EXPERIMENT_CONFIGS, na_values=['NULL'])
-        logging.info(f"from_db df shape: {from_db.shape}")
         pending_df = from_db[from_db[db_constants.STATUS] == str(RunStatus.PENDING)]
-        logging.info(f"Pending df shape: {pending_df.shape}")
         limited_pending_df = pending_df.head(n=limit)
         logging.debug(f"Total configs in DB: {from_db.shape[0]}, "
                       f"out of them {pending_df.shape[0]} in {RunStatus.PENDING} status. "

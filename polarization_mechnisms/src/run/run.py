@@ -1,4 +1,3 @@
-import concurrent.futures
 import copy
 import logging
 import os
@@ -9,9 +8,7 @@ from pathlib import Path
 from analyze.results import MeasurementResult
 from experiment.experiment import Experiment
 from experiment.result import ExperimentResult
-from run.util import RunStatus
 from simulation.config import SimulationConfig, SimulationType
-from storage.results import StoreResults
 from visualize.visualize import MEASUREMENTS_TO_VISUALIZE
 
 BASE_LOG_PATH = f"{os.getcwd()}/../logs/"
@@ -135,22 +132,3 @@ def run_using_conf(conf: SimulationConfig) -> tuple[SimulationConfig, Experiment
     for measurement in MEASUREMENTS_TO_VISUALIZE:
         measurement_results.append(measurement.apply_measure(results))
     return conf, results, measurement_results
-
-
-if __name__ == '__main__':
-    config_loger(False, use_log_file=USE_LOG_FILE)
-    StoreResults.init(BASE_LOG_PATH)
-    storage_result = StoreResults.instance()
-    storage_result.clear_db()
-    storage_result.bootstrap_db_files()
-    configs_list_to_run = configs_to_run()
-    storage_result.add_configs_to_run(configs_list_to_run)
-
-    to_run = storage_result.get_configs_to_run(limit=2000)
-    logging.info(f"Stating to run {len(to_run)} configs using {MAX_WORKERS} workers.")
-    with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        for finished_conf, finished_results, finished_measurement_results in executor.map(run_using_conf, to_run):
-            storage_result.append_measurements(finished_results.experiment_id, finished_measurement_results)
-            storage_result.append_experiment_result(finished_results, store_actual_results=False)
-            storage_result.update_config_run_status(finished_conf.config_id, RunStatus.SUCCESS)
-    logging.info(f"Finished!")
