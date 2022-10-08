@@ -34,7 +34,7 @@ def simulation_conf() -> SimulationConfig:
         truncate_at=0.001,
         epsilon=0.4,
         mark_stubborn_at=0.1,
-        audit_iteration_predicate=lambda iteration_index: True)
+        audit_iteration_every=1)
 
 
 @pytest.fixture

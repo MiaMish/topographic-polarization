@@ -1,10 +1,15 @@
 import concurrent.futures
+import copy
 import logging
 import os
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-import copy
+
+from analyze.results import MeasurementResult
 from experiment.experiment import Experiment
+from experiment.result import ExperimentResult
+from run.util import RunStatus
 from simulation.config import SimulationConfig, SimulationType
 from storage.results import StoreResults
 from visualize.visualize import MEASUREMENTS_TO_VISUALIZE
@@ -29,7 +34,7 @@ def get_vanilla_similarity_conf():
         truncate_at=0.0001,
         epsilon=0.1,
         mark_stubborn_at=0.1,
-        audit_iteration_predicate=lambda iteration_index: iteration_index % 2 == 0,
+        audit_iteration_every=2,
         display_name="Epsilon = 0.1")
 
 
@@ -38,6 +43,7 @@ def x(configs, to_apply, variation_list_to_apply):
     for config in configs:
         for variation in variation_list_to_apply:
             variation_to_append = to_apply(copy.deepcopy(config), variation)
+            variation_to_append.config_id = uuid.uuid4()
             new_configs.append(variation_to_append)
     return new_configs
 
@@ -121,19 +127,14 @@ def config_loger(is_worker: bool = False, use_log_file: bool = True):
     logging.info(f"Configured logger for filename={log_file}")
 
 
-def run_using_conf(config_index):
+def run_using_conf(conf: SimulationConfig) -> tuple[SimulationConfig, ExperimentResult, list[MeasurementResult]]:
     config_loger(True)
-    conf = configs_to_run()[config_index]
-    logging.info(f"Running config_index={config_index} flow for config_display_name={conf.display_name}")
-    logging.info(f"Config: {conf}")
-    store_results = StoreResults(BASE_DB_PATH)
+    logging.info(f"Starting to run with config: {conf}")
     results = Experiment(conf).run_experiment()
-    store_results.append_experiment_result(results, store_actual_results=False)
+    measurement_results = []
     for measurement in MEASUREMENTS_TO_VISUALIZE:
-        measurement_result = measurement.apply_measure(results)
-        store_results.append_measurement(measurement_result)
-    logging.info(f"Finished config_index={config_index} flow for config_display_name={conf.display_name}")
-    return config_index
+        measurement_results.append(measurement.apply_measure(results))
+    return conf, results, measurement_results
 
 
 if __name__ == '__main__':
@@ -142,7 +143,12 @@ if __name__ == '__main__':
     storage_result.clear_db()
     storage_result.bootstrap_db_files()
     configs_list_to_run = configs_to_run()
-    logging.info(f"Stating to run {len(configs_list_to_run)} configs using {MAX_WORKERS} workers.")
+    storage_result.add_configs_to_run(configs_list_to_run)
+
+    to_run = storage_result.get_configs_to_run(limit=2000)
+    logging.info(f"Stating to run {len(to_run)} configs using {MAX_WORKERS} workers.")
     with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        for config_index_finished in executor.map(run_using_conf, range(0, len(configs_list_to_run))):
-            logging.info(f"Finished config_index={config_index_finished} flow")
+        for finished_conf, finished_results, finished_measurement_results in executor.map(run_using_conf, to_run):
+            storage_result.append_measurements(finished_results.experiment_id, finished_measurement_results)
+            storage_result.append_experiment_result(finished_results, store_actual_results=False)
+            storage_result.update_config_run_status(finished_conf.config_id, RunStatus.SUCCESS)

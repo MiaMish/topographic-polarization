@@ -29,7 +29,7 @@ def vanilla_simulation_conf() -> Callable[[SimulationType], SimulationConfig]:
         truncate_at=0.001,
         epsilon=0.4,
         mark_stubborn_at=0.1,
-        audit_iteration_predicate=lambda iteration_index: True)
+        audit_iteration_every=1)
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def switch_agents_simulation_conf() -> Callable[[SimulationType], SimulationConf
         truncate_at=0.001,
         epsilon=0.4,
         mark_stubborn_at=0.1,
-        audit_iteration_predicate=lambda iteration_index: True)
+        audit_iteration_every=1)
 
 
 @pytest.fixture
@@ -63,7 +63,7 @@ def radical_exposure_simulation_conf() -> Callable[[SimulationType], SimulationC
         truncate_at=0.001,
         epsilon=0.4,
         mark_stubborn_at=0.1,
-        audit_iteration_predicate=lambda iteration_index: True)
+        audit_iteration_every=1)
 
 
 def _run_experiment(simulation_config: SimulationConfig, expected: Dict[str, pd.DataFrame]):

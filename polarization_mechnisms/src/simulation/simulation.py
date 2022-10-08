@@ -43,7 +43,7 @@ class Simulation(ABC):
         results = SimulationResult()
         results.timestamp = datetime.datetime.now()
         for iteration in range(self.simulation_config.num_iterations):
-            if self.simulation_config.audit_iteration_predicate(iteration):
+            if self.simulation_config.should_audit_iteration(iteration):
                 results.add_iteration_result(iteration, IterationResult(self.opinions_list))
             if self._should_switch_agents():
                 agent_to_switch = random.choice(range(self.simulation_config.num_of_agents), replace=False)

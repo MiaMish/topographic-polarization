@@ -15,6 +15,7 @@ EXPERIMENT_TAGS = "experiment_tags"
 TIMESTAMP = "timestamp"
 EXPERIMENT_ID = "experiment_id"
 DISPLAY_NAME = "display_name"
+AUDIT_EVERY_X_ITERATIONS = "audit_every_x_iterations"
 MARK_STUBBORN_AT = "mark_stubborn_at"
 EPSILON = "epsilon"
 TRUNCATE_AT = "truncate_at"
@@ -30,6 +31,7 @@ CONFIG_ID = "config_id"
 MEASUREMENT_TYPE = "measurement_type"
 X = "x"
 VALUE = "value"
+STATUS = "status"
 
 TABLES = {
     EXPERIMENT_CONFIGS: [
@@ -45,7 +47,9 @@ TABLES = {
         TRUNCATE_AT,
         EPSILON,
         MARK_STUBBORN_AT,
-        DISPLAY_NAME
+        DISPLAY_NAME,
+        STATUS,
+        TIMESTAMP
     ],
     EXPERIMENT_RESULT: [
         EXPERIMENT_ID,

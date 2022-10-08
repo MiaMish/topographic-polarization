@@ -1,6 +1,6 @@
 import uuid
 from enum import Enum
-from typing import Callable, List
+from typing import List
 
 DEFAULT_RADICAL_EXPOSURE_ETA = None
 DEFAULT_SWITCH_AGENT_SIGMA = 0.2
@@ -39,9 +39,9 @@ class SimulationConfig:
             truncate_at: float = DEFAULT_TRUNCATE_AT,
             epsilon: float = DEFAULT_EPSILON,
             mark_stubborn_at: float = DEFAULT_MARK_STUBBORN_AT,
-            audit_iteration_predicate: Callable[[int], bool] = lambda iteration_index:
-            default_audit_iteration_predicate(iteration_index, DEFAULT_NUM_OF_ITERATIONS),
-            display_name: str or None = None
+            audit_iteration_every: int = 30,
+            display_name: str or None = None,
+            config_id: str or None = None,
     ):
         """
 
@@ -63,10 +63,11 @@ class SimulationConfig:
         :param mark_stubborn_at: Relevant only for type == ASSIMILATION.
         In that flow, if the initial opinion of an agent is not in between [x, 1 - x] it is marked as stubborn.
         Stubborn agents do not change their opinions through the simulation.
-        :param audit_iteration_predicate: Determines if iteration is audited.
+        :param audit_iteration_every: Determines if iteration is audited.
         :param display_name: Display name for charts, logs, etc.
+        :param config_id: If config ID is provided use it; Otherwise generate UUID4.
         """
-        self.config_id = uuid.uuid4()
+        self.config_id = uuid.uuid4() if config_id is None else config_id
         self.simulation_type = simulation_type
         self.num_of_agents = num_of_agents
         self.num_iterations = num_iterations
@@ -78,7 +79,7 @@ class SimulationConfig:
         self.truncate_at = truncate_at
         self.epsilon = epsilon
         self.mark_stubborn_at = mark_stubborn_at
-        self.audit_iteration_predicate = audit_iteration_predicate
+        self.audit_iteration_every = audit_iteration_every
         self.display_name = display_name
 
     def __str__(self):
@@ -96,5 +97,8 @@ class SimulationConfig:
                           f"mark_stubborn_at={self.mark_stubborn_at}\n"
         return flow_config_str
 
+    def should_audit_iteration(self, iteration_num):
+        return iteration_num == 1 or (iteration_num + 1) % self.audit_iteration_every == 0 or (iteration_num - 1) == self.num_iterations
+
     def audited_iterations(self) -> List[int]:
-        return [i for i in range(self.num_iterations) if self.audit_iteration_predicate(i)]
+        return [i for i in range(self.num_iterations) if self.should_audit_iteration(i)]
