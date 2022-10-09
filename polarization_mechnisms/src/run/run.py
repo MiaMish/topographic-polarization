@@ -31,7 +31,7 @@ def get_vanilla_similarity_conf():
         truncate_at=0.0001,
         epsilon=0.1,
         mark_stubborn_at=0.1,
-        audit_iteration_every=None,
+        audit_iteration_every=30,
         display_name="Epsilon = 0.1")
 
 
@@ -86,7 +86,7 @@ def configs_to_run():
 
     configs = x(configs, change_simulation_type, [SimulationType.SIMILARITY, SimulationType.REPULSIVE])
     configs = x(configs, change_num_of_agents, [100])
-    configs = x(configs, change_num_iterations, [10000])
+    configs = x(configs, change_num_iterations, [5000])
     configs = x(configs, change_mio, [0.2, 0.4])
     configs = x(configs, change_num_of_repetitions, [400])
     configs = x(configs, change_switch_agent_rate, [None, 5])
