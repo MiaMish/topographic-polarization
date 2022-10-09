@@ -53,12 +53,12 @@ class AssimilationSimulation(Simulation):
         exposure_normalizer_coefficient = 1 / exposure_normalizer_coefficient_denominator \
             if exposure_normalizer_coefficient_denominator > 0 \
             else 1
-        if agent == 1:
-            logging.info(f"distance_from_neighbors_opinions={distance_from_neighbors_opinions}\n"
-                         f"is_exposed_indicators={is_exposed_indicators}\n"
-                         f"neighbors_cumulative_effect={neighbors_cumulative_effect}\n"
-                         f"exposure_normalizer_coefficient={exposure_normalizer_coefficient}\n"
-                         f"self.weights_dict[f'{agent}']={self.weights_dict[f'{agent}']}")
+        # if agent == 1:
+        #     logging.info(f"distance_from_neighbors_opinions={distance_from_neighbors_opinions}\n"
+        #                  f"is_exposed_indicators={is_exposed_indicators}\n"
+        #                  f"neighbors_cumulative_effect={neighbors_cumulative_effect}\n"
+        #                  f"exposure_normalizer_coefficient={exposure_normalizer_coefficient}\n"
+        #                  f"self.weights_dict[f'{agent}']={self.weights_dict[f'{agent}']}")
         return agent_opinion + self.simulation_config.mio * exposure_normalizer_coefficient * neighbors_cumulative_effect
 
     def _update_opinions(self, agent_i, agent_j) -> ndarray:

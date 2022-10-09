@@ -41,6 +41,17 @@ def append_configs():
 def run_experiments(max_workers: int, max_experiments: int):
     to_run = StoreResults.instance().get_configs_to_run(limit=max_experiments)
     logging.info(f"Stating to run {len(to_run)} configs using {max_workers} workers.")
+    if max_workers == 1:
+        completed_tasks = 0
+        for conf_to_run in to_run:
+            finished_conf, finished_results, finished_measurement_results = run.run_using_conf(conf_to_run)
+            StoreResults.instance().append_measurements(finished_results.experiment_id, finished_measurement_results)
+            StoreResults.instance().append_experiment_result(finished_results, store_actual_results=False)
+            StoreResults.instance().update_config_run_status(finished_conf.config_id, RunStatus.SUCCESS)
+            completed_tasks += 1
+            logging.info(f"Completed task #{completed_tasks} (out of {len(to_run)})")
+        return
+
     pool = concurrent.futures.ProcessPoolExecutor(max_workers=max_workers)
     futures_list = [pool.submit(run.run_using_conf, conf_to_run) for conf_to_run in to_run]
     completed_tasks = 0

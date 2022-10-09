@@ -125,7 +125,7 @@ def config_loger(is_worker: bool = False, use_log_file: bool = True):
 
 
 def run_using_conf(conf: SimulationConfig) -> tuple[SimulationConfig, ExperimentResult, list[MeasurementResult]]:
-    config_loger(True)
+    config_loger(True, False)
     logging.info(f"Starting to run with config: {conf}")
     results = Experiment(conf).run_experiment()
     measurement_results = []
