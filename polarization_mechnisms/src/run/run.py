@@ -84,11 +84,11 @@ def configs_to_run():
         config.epsilon = epsilon
         return config
 
-    configs = x(configs, change_simulation_type, [SimulationType.SIMILARITY, SimulationType.REPULSIVE, SimulationType.ASSIMILATION])
-    configs = x(configs, change_num_of_agents, [15, 30])
-    configs = x(configs, change_num_iterations, [30, 50])
+    configs = x(configs, change_simulation_type, [SimulationType.SIMILARITY, SimulationType.REPULSIVE])
+    configs = x(configs, change_num_of_agents, [100])
+    configs = x(configs, change_num_iterations, [10000])
     configs = x(configs, change_mio, [0.2, 0.4])
-    configs = x(configs, change_num_of_repetitions, [5, 10])
+    configs = x(configs, change_num_of_repetitions, [400])
     configs = x(configs, change_switch_agent_rate, [None, 5])
     configs = x(configs, change_switch_agent_sigma, [None, 0.2])
     configs = x(configs, change_radical_exposure_eta, [None, 0.2])
