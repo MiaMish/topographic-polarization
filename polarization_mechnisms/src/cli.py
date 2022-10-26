@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 import concurrent
+import datetime
 import logging
+import shutil
+
+import boto3
 import click
 import concurrent.futures
 import run.run as run
@@ -9,10 +13,12 @@ from storage.results import StoreResults
 
 
 @click.group()
+@click.pass_context
 @click.option("--use_log_file", is_flag=True, show_default=True, default=False, help="Log master process to file.")
 @click.option('--base_db_path', 'base_db_path', type=str, default=run.BASE_DB_PATH)
-def cli(use_log_file: bool, base_db_path: str):
+def cli(ctx, use_log_file: bool, base_db_path: str):
     run.config_loger(False, use_log_file=use_log_file)
+    ctx.obj = {"base_db_path": base_db_path}
     StoreResults.init(base_db_path)
 
 
@@ -35,8 +41,7 @@ def append_configs():
 
 
 @cli.command()
-# @click.option("--use_log_file_workers", is_flag=True, show_default=True, default=True, help="Log workers to file.")
-@click.option('--max_workers', 'max_workers', type=int, default=12)
+@click.option('--max_workers', 'max_workers', type=int, default=1)
 @click.option('--max_experiments', 'max_experiments', type=int, default=2000)
 def run_experiments(max_workers: int, max_experiments: int):
     to_run = StoreResults.instance().get_configs_to_run(limit=max_experiments)
@@ -65,6 +70,19 @@ def run_experiments(max_workers: int, max_experiments: int):
         StoreResults.instance().update_config_run_status(finished_conf.config_id, RunStatus.SUCCESS)
         completed_tasks += 1
         logging.info(f"Completed task #{completed_tasks} (out of {len(to_run)})")
+
+
+@cli.command()
+@click.pass_context
+@click.option('--bucket', 'bucket', type=str, default="mia-sagemaker-poc")
+@click.option('--object_name', 'object_name', type=str,
+              default=f"batchJob/tests/resources_{int(datetime.datetime.now().timestamp())}.zip")
+def s3_upload(ctx: click.core.Context, bucket, object_name):
+    output_filename = "resources"
+    click.echo(f"Zipping {ctx.obj['base_db_path']} to {output_filename}")
+    shutil.make_archive(output_filename, 'zip', ctx.obj['base_db_path'])
+    s3_resource = boto3.client('s3')
+    s3_resource.upload_file(f"{output_filename}.zip", bucket, object_name)
 
 
 @cli.command()

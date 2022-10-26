@@ -4,6 +4,7 @@ import os
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import List
 
 from analyze.results import MeasurementResult
 from experiment.experiment import Experiment
@@ -45,7 +46,7 @@ def x(configs, to_apply, variation_list_to_apply):
     return new_configs
 
 
-def configs_to_run():
+def configs_to_run() -> List[SimulationConfig]:
     configs = [get_vanilla_similarity_conf()]
 
     def change_simulation_type(config, simulation_type):
