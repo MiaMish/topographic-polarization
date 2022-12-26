@@ -37,7 +37,7 @@ def visualize_results(experiment_results: List[ExperimentResult]):
         scatter_plot_from_measurements(measurement, measurement_results)
 
 
-def scatter_plot_from_measurements(measurement: Measurement, measurement_results: List[MeasurementResult]):
+def scatter_plot_from_measurements(measurement: Measurement, measurement_results: List[MeasurementResult], store_in_file: str = None):
     scattered = []
     names = []
     colors_iter = _colors_generator()
@@ -55,4 +55,6 @@ def scatter_plot_from_measurements(measurement: Measurement, measurement_results
     ylim = measurement.ylim()
     if ylim is not None:
         plt.ylim([0, 1])
-    plt.show()
+    # plt.show()
+    if store_in_file is not None:
+        plt.savefig(store_in_file)

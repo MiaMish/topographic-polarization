@@ -1,5 +1,6 @@
 import numpy as np
 
+from analyze.measurement import constants
 from analyze.measurement.base import Measurement
 from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
@@ -10,7 +11,7 @@ from experiment.result import ExperimentResult
 class CoveredBinsMeasurement(Measurement):
 
     def __init__(self, num_of_bins: int = 10):
-        super().__init__("COVERED_BINS", "% of Covered Deciles")
+        super().__init__(constants.COVERED_BINS, "% of Covered Deciles")
         self.num_of_bins = num_of_bins
 
     def apply_measure(self, experiment_result: ExperimentResult) -> MeasurementResult:

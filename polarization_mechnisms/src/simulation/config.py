@@ -102,7 +102,7 @@ class SimulationConfig:
     def _default_audit_every_val(num_iterations):
         if num_iterations <= 100:
             return 2
-        return max(5, math.ceil(num_iterations / 400))
+        return max(5, math.ceil(num_iterations / 40))  # 400
 
     def should_audit_iteration(self, iteration_num):
         return iteration_num == 1 or (iteration_num + 1) % self.audit_iteration_every == 0 or (iteration_num - 1) == self.num_iterations

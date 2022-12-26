@@ -37,7 +37,12 @@ class Simulation(ABC):
     def _is_exposed_to_passive(self, passive_agent_opinion: float) -> bool:
         if self.simulation_config.radical_exposure_eta is None:
             return True
-        return np.random.binomial(1, self.simulation_config.radical_exposure_eta * abs(0.5 - passive_agent_opinion)) == 1
+        probability_to_be_exposed = 1 - self.simulation_config.radical_exposure_eta * abs(0.5 - passive_agent_opinion)
+        if probability_to_be_exposed > 1:
+            return True
+        if probability_to_be_exposed < 0:
+            return False
+        return np.random.binomial(1, probability_to_be_exposed) == 1
 
     def run_simulation(self) -> SimulationResult:
         results = SimulationResult()

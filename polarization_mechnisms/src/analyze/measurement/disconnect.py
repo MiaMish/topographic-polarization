@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import ndarray, sort
 
+from analyze.measurement import constants
 from analyze.results import MeasurementResult
 from analyze.measurement.base import Measurement
 from experiment.result import ExperimentResult
@@ -10,7 +11,7 @@ from experiment.result import ExperimentResult
 class DisconnectIndexMeasurement(Measurement):
 
     def __init__(self, disconnect_factor: float = 0.2):
-        super().__init__("DISCONNECT_INDEX", "Disconnect Index")
+        super().__init__(constants.DISCONNECT_INDEX, "Disconnect Index")
         self.disconnect_factor = disconnect_factor
 
     def apply_measure(self, experiment_result: ExperimentResult) -> MeasurementResult:

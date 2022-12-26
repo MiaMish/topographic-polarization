@@ -1,3 +1,4 @@
+from analyze.measurement import constants
 from analyze.results import MeasurementResult
 from analyze.measurement.base import Measurement
 from experiment.result import ExperimentResult
@@ -7,7 +8,7 @@ from experiment.result import ExperimentResult
 class SpreadMeasurement(Measurement):
 
     def __init__(self):
-        super().__init__("SPREAD", "Delta Between Max and Min Opinions")
+        super().__init__(constants.SPREAD, "Delta Between Max and Min Opinions")
 
     def ylim(self):
         return 0, 1

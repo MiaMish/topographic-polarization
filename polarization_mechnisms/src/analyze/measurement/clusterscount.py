@@ -2,8 +2,9 @@ import numpy as np
 from numpy import ndarray
 from sklearn.cluster import KMeans
 
-from analyze.results import MeasurementResult
+from analyze.measurement import constants
 from analyze.measurement.base import Measurement
+from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 
 
@@ -12,7 +13,7 @@ from experiment.result import ExperimentResult
 class ClustersCountMeasurement(Measurement):
 
     def __init__(self):
-        super().__init__("NUM_OF_CLUSTERS", "Number of Clusters (KNN + Elbow Method)")
+        super().__init__(constants.NUM_OF_CLUSTERS, "Number of Clusters (KNN + Elbow Method)")
 
     def ylim(self):
         return 0, 1

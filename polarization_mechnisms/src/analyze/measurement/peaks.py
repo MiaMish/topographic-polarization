@@ -2,6 +2,7 @@ import numpy as np
 from scipy.interpolate import UnivariateSpline
 from scipy.signal import argrelmax, argrelmin
 
+from analyze.measurement import constants
 from analyze.results import MeasurementResult
 from analyze.measurement.base import Measurement
 from experiment.result import ExperimentResult
@@ -17,7 +18,7 @@ from experiment.result import ExperimentResult
 class PeaksMeasurement(Measurement):
 
     def __init__(self):
-        super().__init__("NUM_OF_LOCAL_MAX", "Number of Local Peak Points")
+        super().__init__(constants.NUM_OF_LOCAL_MAX, "Number of Local Peak Points")
 
     def apply_measure(self, experiment_result: ExperimentResult) -> MeasurementResult:
         return self._apply_measure_using_opinion_list_func(

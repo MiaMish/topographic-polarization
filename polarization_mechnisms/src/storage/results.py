@@ -1,14 +1,15 @@
-import datetime
 import logging
 import os
 import shutil
+import string
 from pathlib import Path
-from typing import List
+from typing import List, Dict, Any, Callable
 from uuid import UUID
 
 import pandas as pd
 
 import storage.constants as db_constants
+from analyze.analyzer import avg_results_gif
 from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 from run.util import RunStatus
@@ -75,11 +76,33 @@ class StoreResults:
         existing_df = existing_df.append(converter.measurements_to_df(measurement_results), ignore_index=True)
         existing_df.to_csv(directory_path + db_constants.MEASUREMENTS, index=False, na_rep='NULL')
 
-    def append_experiment_result(self, experiment_result: ExperimentResult, store_actual_results: bool = True):
+    def retrieve_measurement_results_for_experiment(self, experiment_id: UUID, display_name: string) -> List[MeasurementResult]:
+        directory_path = self.base_path + self._partition_prefix(experiment_id)
+        from_db = pd.read_csv(directory_path + db_constants.MEASUREMENTS, na_values=['NULL'])
+        filtered_df = from_db[from_db[db_constants.EXPERIMENT_ID] == str(experiment_id)]
+        a = converter.df_to_measurements(filtered_df, experiment_id, display_name)
+        return a
+
+    def retrieve_measurement_results(self) -> List[MeasurementResult]:
+        return self.retrieve_measurement_results_for_configs(self.retrieve_configurations(), lambda simulation_config: simulation_config.display_name)
+
+    def retrieve_measurement_results_for_configs(self, simulation_configs: List[SimulationConfig], display_name_extractor: Callable[[SimulationConfig], str]) -> List[MeasurementResult]:
+        experiment_results_df = pd.read_csv(self.base_path + db_constants.EXPERIMENT_RESULT, na_values=['NULL'])
+        experiment_results = converter.df_to_experiment_results(simulation_configs, experiment_results_df)
+        results = []
+        for experiment_result in experiment_results:
+            display_name = display_name_extractor(experiment_result.simulation_configs)
+            results = results + (self.retrieve_measurement_results_for_experiment(experiment_result.experiment_id, display_name))
+        return results
+
+    def append_experiment_result(self, experiment_result: ExperimentResult, store_actual_results: bool = True, generate_gif: bool = True):
         existing_df = pd.read_csv(self.base_path + db_constants.EXPERIMENT_RESULT, na_values=['NULL'])
         existing_df = existing_df.append(converter.experiment_results_to_df(experiment_result), ignore_index=True)
         existing_df.to_csv(self.base_path + db_constants.EXPERIMENT_RESULT, index=False, na_rep='NULL')
-
+        if generate_gif:
+            gif_path = f"{self.base_path}../figures/{experiment_result.experiment_id}.gif"
+            avg_results_gif(experiment_result.simulation_configs, experiment_result, gif_path)
+            logging.info(f"Stored gif in: {gif_path}")
         # if store_actual_results:
         #     logging.debug(f"Appending to {db_constants.SIMULATION_RESULT}...")
         #     with open(self.base_path + db_constants.SIMULATION_RESULT, 'a') as csv_file:
@@ -90,6 +113,18 @@ class StoreResults:
         #     with open(self.base_path + db_constants.ITERATION_RESULT, 'a') as csv_file:
         #         writer = csv.writer(csv_file)
         #         writer.writerows(converter.iteration_results_to_rows(experiment_result))
+
+    def retrieve_configurations(self, filters: Dict[str, Any] = None) -> List[SimulationConfig]:
+        from_db = pd.read_csv(self.base_path + db_constants.EXPERIMENT_CONFIGS, na_values=['NULL'])
+        filtered_df = from_db
+        logging.info("Total configs from DB: %s", len(filtered_df))
+        for filter_by in filters.keys() if filters is not None else []:
+            if filters[filter_by] is None:
+                filtered_df = filtered_df[filtered_df[filter_by].isnull()]
+            else:
+                filtered_df = filtered_df[filtered_df[filter_by] == filters[filter_by]]
+            logging.info("Total filtered configs by %s=%s. Num of configs after filtering configs: %s", filter_by, filters[filter_by], len(filtered_df))
+        return [converter.df_to_experiment_configs(row) for index, row in filtered_df.iterrows()]
 
     def retrieve_configuration(self, config_id: UUID) -> SimulationConfig or None:
         from_db = pd.read_csv(self.base_path + db_constants.EXPERIMENT_CONFIGS, na_values=['NULL'])
@@ -178,7 +213,8 @@ class StoreResults:
 
     @staticmethod
     def _partition_prefix(id_for_partition: UUID) -> str:
-        return f"{id_for_partition.hex[0]}/{id_for_partition.hex[1]}/"
+        # return f"{id_for_partition.hex[0]}/{id_for_partition.hex[1]}/"
+        return ""
 
     def add_configs_to_run(self, configs: List[SimulationConfig]):
         from_db = pd.read_csv(self.base_path + db_constants.EXPERIMENT_CONFIGS, na_values=['NULL'])
@@ -198,3 +234,12 @@ class StoreResults:
                       f"out of them {pending_df.shape[0]} in {RunStatus.PENDING} status. "
                       f"Using limit of {limit}.")
         return [converter.df_to_experiment_configs(row) for index, row in limited_pending_df.iterrows()]
+
+    def combine_db_to_single_table(self):
+        configs_df = pd.read_csv(self.base_path + db_constants.EXPERIMENT_CONFIGS, na_values=['NULL'])
+        experiment_results_df = pd.read_csv(self.base_path + db_constants.EXPERIMENT_RESULT, na_values=['NULL'])
+        measurements_df = pd.read_csv(self.base_path + db_constants.MEASUREMENTS, na_values=['NULL'])
+        experiment_results_combined = pd.merge(experiment_results_df, configs_df, on=db_constants.CONFIG_ID, how="left")
+        experiment_results_combined.to_csv(self.base_path + db_constants.COMBINED_EXPERIMENT, index=False, na_rep='NULL')
+        combined_df = pd.merge(measurements_df, experiment_results_combined, on=db_constants.EXPERIMENT_ID, how="left")
+        combined_df.to_csv(self.base_path + db_constants.COMBINED_MEASUREMENTS, index=False, na_rep='NULL')

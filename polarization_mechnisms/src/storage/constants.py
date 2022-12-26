@@ -1,10 +1,12 @@
 
 # Tables names
-EXPERIMENT_CONFIGS = "experiment_configs"
-EXPERIMENT_RESULT = "experiment_result"
-SIMULATION_RESULT = "simulation_result"
-ITERATION_RESULT = "iteration_result"
-MEASUREMENTS = "measurements"
+EXPERIMENT_CONFIGS = "experiment_configs.csv"
+EXPERIMENT_RESULT = "experiment_result.csv"
+SIMULATION_RESULT = "simulation_result.csv"
+ITERATION_RESULT = "iteration_result.csv"
+MEASUREMENTS = "measurements.csv"
+COMBINED_MEASUREMENTS = "combined_measurements.csv"
+COMBINED_EXPERIMENT = "combined_experiments.csv"
 
 # Fields names
 OPINIONS_LIST = "opinions_list"

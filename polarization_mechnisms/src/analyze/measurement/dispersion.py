@@ -1,5 +1,6 @@
 from numpy import var
 
+from analyze.measurement import constants
 from analyze.results import MeasurementResult
 from analyze.measurement.base import Measurement
 from experiment.result import ExperimentResult
@@ -9,10 +10,7 @@ from experiment.result import ExperimentResult
 class DispersionMeasurement(Measurement):
 
     def __init__(self):
-        super().__init__("DISPERSION", "Variance of Opinions")
-
-    def ylim(self):
-        return 0, 1
+        super().__init__(constants.DISPERSION, "Variance of Opinions")
 
     def apply_measure(self, experiment_result: ExperimentResult) -> MeasurementResult:
         return self._apply_measure_using_opinion_list_func(

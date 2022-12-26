@@ -7,10 +7,13 @@ from experiment.result import ExperimentResult
 from simulation.config import SimulationConfig
 
 
-def avg_results_gif(simulation_config: SimulationConfig, results: ExperimentResult, out_file_path: str) -> None:
+def avg_results_gif(simulation_config: SimulationConfig, results: ExperimentResult, out_file_path: str, num_of_steps_in_gif: int = 25) -> None:
     num_of_repetitions = len(results.simulation_map)
     data = []
-    for iteration in simulation_config.audited_iterations():
+    # iteration_num == 1 or (iteration_num + 1) % self.audit_iteration_every == 0 or (iteration_num - 1) == self.num_iterations
+    audited_iterations = simulation_config.audited_iterations()
+    iterations_for_gif = [audited_iterations[int(i * (len(audited_iterations) / num_of_steps_in_gif))] for i in range(num_of_steps_in_gif)]
+    for iteration in iterations_for_gif:
         avg_opinions_list = []
         for i in range(simulation_config.num_of_agents):
             a = []
@@ -43,7 +46,7 @@ def avg_results_gif(simulation_config: SimulationConfig, results: ExperimentResu
 
     ani = animation.FuncAnimation(fig, animate, interval=1000, frames=time_steps)
     ani.save(out_file_path, writer='pillow')
-    plt.show()
+    # plt.show()
 
 
 def print_analysis(iteration, opinions_list):

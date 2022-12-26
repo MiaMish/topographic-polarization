@@ -1,6 +1,7 @@
 import numpy as np
 from ripleyk import ripleyk
 
+from analyze.measurement import constants
 from analyze.results import MeasurementResult
 from analyze.measurement.base import Measurement
 from experiment.result import ExperimentResult
@@ -11,7 +12,7 @@ from experiment.result import ExperimentResult
 class RipleyEstimatorMeasurement(Measurement):
 
     def __init__(self, radius: float = 0.5, bounding_radius=1):
-        super().__init__("RIPLEY_ESTIMATOR", "Ripley Estimator")
+        super().__init__(constants.RIPLEY_ESTIMATOR, "Ripley Estimator")
         self.radius = radius
         self.bounding_radius = bounding_radius
 

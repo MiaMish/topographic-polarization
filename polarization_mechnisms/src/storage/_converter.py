@@ -1,7 +1,10 @@
 import json
+import string
+import uuid
+
 import math
-from datetime import datetime
-from typing import List
+from datetime import datetime, timedelta
+from typing import List, Dict
 from uuid import UUID
 
 import pandas as pd
@@ -12,6 +15,7 @@ from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 from run.util import RunStatus
 from simulation.config import SimulationConfig, SimulationType
+from simulation.result import SimulationResult
 
 
 def simulation_results_to_rows(experiment_result: ExperimentResult):
@@ -45,23 +49,78 @@ def experiment_results_to_df(experiment_result: ExperimentResult) -> DataFrame:
     })
 
 
+def _gen_experiment_result(
+        simulation_configs: SimulationConfig,
+        experiment_id: uuid.UUID,
+        timestamp: datetime,
+        run_time: timedelta,
+        simulation_map: Dict[str, SimulationResult] = None
+) -> ExperimentResult:
+    result = ExperimentResult(simulation_configs)
+    result.experiment_id = experiment_id
+    result.timestamp = timestamp
+    result.run_time = run_time
+    if simulation_map is not None:
+        result.simulation_map = simulation_map
+    return result
+
+
+def df_to_experiment_results(
+        simulation_configs: List[SimulationConfig],
+        experiment_results_df: DataFrame
+) -> List[ExperimentResult]:
+    simulation_configs_dict = {simulation_config.config_id: simulation_config for simulation_config in
+                               simulation_configs}
+    result = []
+    for row in zip(experiment_results_df[db_constants.EXPERIMENT_ID],
+                   experiment_results_df[db_constants.TIMESTAMP],
+                   experiment_results_df[db_constants.RUN_TIME],
+                   experiment_results_df[db_constants.CONFIG_ID]):
+        if uuid.UUID(row[3]) not in simulation_configs_dict:
+            continue
+        result.append(
+            _gen_experiment_result(simulation_configs_dict[uuid.UUID(row[3])], uuid.UUID(row[0]), row[1], row[2]))
+    return result
+
+
+def df_to_measurements(df: DataFrame, experiment_id: UUID, display_name: string) -> List[MeasurementResult]:
+    groups_dict = df.groupby(db_constants.MEASUREMENT_TYPE).groups
+    result = []
+    for measurement_type in groups_dict.keys():
+        filtered_df = df[df[db_constants.MEASUREMENT_TYPE] == measurement_type]
+        result.append(MeasurementResult(
+            filtered_df[db_constants.VALUE].to_numpy(),
+            filtered_df[db_constants.X].to_numpy(),
+            experiment_id,
+            str(measurement_type),
+            display_name)
+        )
+    return result
+
+
 def experiment_configs_to_df(simulation_configs: List[SimulationConfig], run_status: RunStatus) -> DataFrame:
     epoch_now = int(datetime.now().timestamp() * 1000)
     return pd.DataFrame(data={
         db_constants.CONFIG_ID: [simulation_config.config_id for simulation_config in simulation_configs],
-        db_constants.SIMULATION_TYPE: [simulation_config.simulation_type.name for simulation_config in simulation_configs],
+        db_constants.SIMULATION_TYPE: [simulation_config.simulation_type.name for simulation_config in
+                                       simulation_configs],
         db_constants.NUM_OF_AGENTS: [simulation_config.num_of_agents for simulation_config in simulation_configs],
         db_constants.NUM_ITERATIONS: [simulation_config.num_iterations for simulation_config in simulation_configs],
         db_constants.MIO: [simulation_config.mio for simulation_config in simulation_configs],
-        db_constants.NUM_OF_REPETITIONS: [simulation_config.num_of_repetitions for simulation_config in simulation_configs],
-        db_constants.SWITCH_AGENT_RATE: [simulation_config.switch_agent_rate for simulation_config in simulation_configs],
-        db_constants.SWITCH_AGENT_SIGMA: [simulation_config.switch_agent_sigma for simulation_config in simulation_configs],
-        db_constants.RADICAL_EXPOSURE_ETA: [simulation_config.radical_exposure_eta for simulation_config in simulation_configs],
+        db_constants.NUM_OF_REPETITIONS: [simulation_config.num_of_repetitions for simulation_config in
+                                          simulation_configs],
+        db_constants.SWITCH_AGENT_RATE: [simulation_config.switch_agent_rate for simulation_config in
+                                         simulation_configs],
+        db_constants.SWITCH_AGENT_SIGMA: [simulation_config.switch_agent_sigma for simulation_config in
+                                          simulation_configs],
+        db_constants.RADICAL_EXPOSURE_ETA: [simulation_config.radical_exposure_eta for simulation_config in
+                                            simulation_configs],
         db_constants.TRUNCATE_AT: [simulation_config.truncate_at for simulation_config in simulation_configs],
         db_constants.EPSILON: [simulation_config.epsilon for simulation_config in simulation_configs],
         db_constants.MARK_STUBBORN_AT: [simulation_config.mark_stubborn_at for simulation_config in simulation_configs],
         db_constants.DISPLAY_NAME: [simulation_config.display_name for simulation_config in simulation_configs],
-        db_constants.AUDIT_EVERY_X_ITERATIONS: [simulation_config.audit_iteration_every for simulation_config in simulation_configs],
+        db_constants.AUDIT_EVERY_X_ITERATIONS: [simulation_config.audit_iteration_every for simulation_config in
+                                                simulation_configs],
         db_constants.STATUS: [run_status] * len(simulation_configs),
         db_constants.TIMESTAMP: [epoch_now] * len(simulation_configs)
     })
