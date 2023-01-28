@@ -1,0 +1,1 @@
+config_id,simulation_type,num_of_agents,num_iterations,mio,num_of_repetitions,switch_agent_rate,switch_agent_sigma,radical_exposure_eta,truncate_at,epsilon,mark_stubborn_at,display_name,status,timestamp

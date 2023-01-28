@@ -1,0 +1,25 @@
+-----
+file_path: /Users/miajoskowicz/dev/personal/topographic-polarization/polarization_mechnisms/src/../resources/figures/spread_radical_similarity.png
+measurement_type: SPREAD
+filters: {'simulation_type': 'SIMILARITY', 'num_of_agents': 100, 'num_iterations': 10000, 'num_of_repetitions': 40, 'mio': 0.2, 'switch_agent_rate': None, 'switch_agent_sigma': None, 'epsilon': 0.2}
+non_filtered_props=['radical_exposure_eta']-----
+file_path: /Users/miajoskowicz/dev/personal/topographic-polarization/polarization_mechnisms/src/../resources/figures/covered_bins_radical_similarity.png
+measurement_type: COVERED_BINS
+filters: {'simulation_type': 'SIMILARITY', 'num_of_agents': 100, 'num_iterations': 10000, 'num_of_repetitions': 40, 'mio': 0.2, 'switch_agent_rate': None, 'switch_agent_sigma': None, 'epsilon': 0.2}
+non_filtered_props=['radical_exposure_eta']-----
+file_path: /Users/miajoskowicz/dev/personal/topographic-polarization/polarization_mechnisms/src/../resources/figures/dispersion_radical_similarity.png
+measurement_type: DISPERSION
+filters: {'simulation_type': 'SIMILARITY', 'num_of_agents': 100, 'num_iterations': 10000, 'num_of_repetitions': 40, 'mio': 0.2, 'switch_agent_rate': None, 'switch_agent_sigma': None, 'epsilon': 0.2}
+non_filtered_props=['radical_exposure_eta']-----
+file_path: /Users/miajoskowicz/dev/personal/topographic-polarization/polarization_mechnisms/src/../resources/figures/spread_radical_similarity.png
+measurement_type: SPREAD
+filters: {'simulation_type': 'SIMILARITY', 'num_of_agents': 100, 'num_iterations': 10000, 'num_of_repetitions': 40, 'mio': 0.2, 'switch_agent_rate': None, 'switch_agent_sigma': None, 'epsilon': 0.2}
+non_filtered_props=['radical_exposure_eta']-----
+file_path: /Users/miajoskowicz/dev/personal/topographic-polarization/polarization_mechnisms/src/../resources/figures/covered_bins_radical_similarity.png
+measurement_type: COVERED_BINS
+filters: {'simulation_type': 'SIMILARITY', 'num_of_agents': 100, 'num_iterations': 10000, 'num_of_repetitions': 40, 'mio': 0.2, 'switch_agent_rate': None, 'switch_agent_sigma': None, 'epsilon': 0.2}
+non_filtered_props=['radical_exposure_eta']-----
+file_path: /Users/miajoskowicz/dev/personal/topographic-polarization/polarization_mechnisms/src/../resources/figures/dispersion_radical_similarity.png
+measurement_type: DISPERSION
+filters: {'simulation_type': 'SIMILARITY', 'num_of_agents': 100, 'num_iterations': 10000, 'num_of_repetitions': 40, 'mio': 0.2, 'switch_agent_rate': None, 'switch_agent_sigma': None, 'epsilon': 0.2}
+non_filtered_props=['radical_exposure_eta']

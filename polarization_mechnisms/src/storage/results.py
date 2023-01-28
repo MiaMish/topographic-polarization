@@ -54,6 +54,7 @@ class StoreResults:
     def bootstrap_db_files(self, force: bool = False) -> None:
         logging.info(f"Bootstrapping DB in {self.base_path}")
         Path(self.base_path).mkdir(parents=True, exist_ok=True)
+        Path(f"{self.base_path}/figures/").mkdir(parents=True, exist_ok=True)
         for table_name, table_fields in db_constants.TABLES.items():
             if table_name == db_constants.MEASUREMENTS:
                 continue
@@ -100,7 +101,7 @@ class StoreResults:
         existing_df = existing_df.append(converter.experiment_results_to_df(experiment_result), ignore_index=True)
         existing_df.to_csv(self.base_path + db_constants.EXPERIMENT_RESULT, index=False, na_rep='NULL')
         if generate_gif:
-            gif_path = f"{self.base_path}../figures/{experiment_result.experiment_id}.gif"
+            gif_path = f"{self.base_path}/figures/{experiment_result.experiment_id}.gif"
             avg_results_gif(experiment_result.simulation_configs, experiment_result, gif_path)
             logging.info(f"Stored gif in: {gif_path}")
         # if store_actual_results:

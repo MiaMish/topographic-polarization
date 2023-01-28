@@ -87,7 +87,8 @@ def append_configs(
     measurement_constants.DISPERSION,
     measurement_constants.NUM_OF_LOCAL_MAX,
     measurement_constants.RIPLEY_ESTIMATOR,
-    measurement_constants.SPREAD]
+    measurement_constants.SPREAD,
+    measurement_constants.BINS_VARIANCE]
 ))
 @click.option('--store_file', 'store_file', type=str)
 def scatter_plot(
@@ -121,7 +122,7 @@ def scatter_plot(
     if epsilon is not None:
         filters[db_constants.EPSILON] = float(epsilon) if epsilon != "None" else None
 
-    run.scatter_plot(filters, measurement_type, store_file)
+    run.scatter_plot(filters, measurement_type, store_file, f"{StoreResults.instance().base_path}/figures/")
 
 
 @cli.command()

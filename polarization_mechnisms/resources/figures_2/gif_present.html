@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Similarity Biased</title>
+    <meta charset="UTF-8">
+</head>
+<div id="similarity"></div>
+<div id="repulsive"></div>
+<body>
+
+
+
+<script>
+    function setImages(id_array, class_name) {
+        id_array.forEach((element, index) => {
+            console.log(element);
+            var img = document.createElement('img');
+            img.src = `${element}.gif`;
+            document.getElementById(class_name).appendChild(img);
+            if ((index + 1) % 6 == 0) {
+                document.getElementById(class_name).appendChild(document.createElement('br'));
+            }
+        });
+    }
+
+    setImages([
+        "af5fec84-3cef-4175-98c2-654651fda5be",
+        "6b5bb8ce-6e20-457f-a5f0-3449a9afdc8f",
+        "c28cf23d-2349-4967-9db7-6b6dbceb1941",
+        "9990607f-cab7-4a37-a5eb-4f622b0194d0",
+        "e3681437-8dda-4ead-8a28-76bd12943007",
+        "092c0689-6f9c-422d-a78a-57a88cdc7648",
+        "0f2f3cd9-e607-435a-a142-2dfee0232b6b",
+        "d88a257a-34e8-4f37-9102-8729ac94b85d",
+        "87db27d0-8462-43e4-aa41-3e57578089b6"
+    ], 'similarity');
+    setImages([
+        "2fb0e247-8176-400e-8171-219ea71de9fb",
+        "c5789a3f-c316-45b8-ac2f-d4086528624e",
+        "16143b01-64ef-4f92-9fa9-f439cd1c96d4",
+        "df650847-cbbc-4b5f-8f33-bd2daf82aa25",
+        "59f9498a-5980-4299-97b9-0082b1476f72",
+        "f8634406-03ea-4ea8-833b-4b71f38ad4ec",
+        "1dc1fd8f-3316-43be-a52c-df922aba5a08",
+        "dc7f533b-0d30-4a11-b5f9-c9475cb8e96f",
+        "de3441e7-e094-44c7-94cd-0db5e4f2e257"
+
+    ], "repulsive")
+</script>
+
+
+
+
+
+
+
+<!--<div class="exposure">-->
+<!--    <img src="c2af7f0f-401a-455b-b792-be93b7af33f5.gif"/>-->
+<!--    <span class="arrow">→</span>-->
+<!--    <img src="449edbea-4708-4c8a-bfe6-631d9a7b514a.gif"/>-->
+<!--    <span class="arrow">→</span>-->
+<!--    <img src="8793db08-5043-49ce-ab88-37b03859de2c.gif"/>-->
+<!--    <span class="arrow">→</span>-->
+<!--    <img src="76e991c5-e8fa-4087-92fa-dfa01c792074.gif"/>-->
+<!--    <span class="arrow">→</span>-->
+<!--    <img src="22da8f26-6af9-425b-be4e-a894362a463f.gif"/>-->
+<!--    <span class="arrow">→</span>-->
+<!--    <img src="277d3214-789d-4278-a10c-77321ddb77db.gif"/>-->
+
+<!--</div>-->
+
+</body>
+</html>

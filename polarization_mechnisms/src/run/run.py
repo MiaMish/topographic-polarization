@@ -15,8 +15,7 @@ from visualize.visualize import MEASUREMENTS_TO_VISUALIZE, scatter_plot_from_mea
 import storage.constants as db_constants
 
 BASE_LOG_PATH = f"{os.getcwd()}/../logs/"
-BASE_DB_PATH = f"{os.getcwd()}/../resources/database/"
-BASE_FIGURES_PATH = f"{os.getcwd()}/../resources/figures/"
+BASE_DB_PATH = f"{os.getcwd()}/../resources/database_3/"
 LOG_LEVEL = logging.INFO
 MAX_WORKERS = 12
 USE_LOG_FILE = False
@@ -158,7 +157,7 @@ def run_using_conf(conf: SimulationConfig) -> tuple[SimulationConfig, Experiment
     return conf, results, measurement_results
 
 
-def scatter_plot(filters: Dict[str, Any], measurement_type: str, store_file: str):
+def scatter_plot(filters: Dict[str, Any], measurement_type: str, store_file: str, figures_dir_path: str):
     # filters = {
     #     db_constants.SIMULATION_TYPE: SimulationType.SIMILARITY.name,
     #     db_constants.NUM_OF_AGENTS: 100,
@@ -170,8 +169,8 @@ def scatter_plot(filters: Dict[str, Any], measurement_type: str, store_file: str
     #     db_constants.RADICAL_EXPOSURE_ETA: 0.2,
     #     db_constants.EPSILON: 0.2
     # }
-    img_file_path = f"{BASE_FIGURES_PATH}{store_file}.png"
-    log_file_path = f"{BASE_FIGURES_PATH}figures.logs"
+    img_file_path = f"{figures_dir_path}{store_file}.png"
+    log_file_path = f"{figures_dir_path}figures.logs"
     logging.info("Using file_path: %s measurement_type: %s and filters: %s", img_file_path, measurement_type, filters)
 
     non_filtered_props = []

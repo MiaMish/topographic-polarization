@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
 from analyze.measurement.base import Measurement
+from analyze.measurement.binsvar import VarianceInBinsMeasurement
 from analyze.measurement.coveredbins import CoveredBinsMeasurement
 from analyze.measurement.dispersion import DispersionMeasurement
 from analyze.measurement.spread import SpreadMeasurement
@@ -16,7 +17,8 @@ MEASUREMENTS_TO_VISUALIZE = [
     DispersionMeasurement(),
     # PeaksMeasurement(),
     CoveredBinsMeasurement(),
-    # DisconnectIndexMeasurement()
+    # DisconnectIndexMeasurement(),
+    VarianceInBinsMeasurement()
 ]
 
 

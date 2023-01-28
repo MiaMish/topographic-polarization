@@ -52,7 +52,7 @@ class Simulation(ABC):
                 results.add_iteration_result(iteration, IterationResult(self.opinions_list))
             if self._should_switch_agents():
                 agent_to_switch = random.choice(range(self.simulation_config.num_of_agents), replace=False)
-                new_agent_opinion = self._truncate_opinion(self.opinions_list[agent_to_switch])
+                new_agent_opinion = self._truncate_opinion(random.normal(self.opinions_list[agent_to_switch], self.simulation_config.switch_agent_sigma))
                 self.opinions_list[agent_to_switch] = new_agent_opinion
                 continue
             agent_i, agent_j = random.choice(range(self.simulation_config.num_of_agents), 2, replace=False)

@@ -1,0 +1,3 @@
+config_id,simulation_type,num_of_agents,num_iterations,mio,num_of_repetitions,switch_agent_rate,switch_agent_sigma,radical_exposure_eta,truncate_at,epsilon,mark_stubborn_at,display_name,status,timestamp,audit_every_x_iterations
+9690b2c1-c279-4988-bed2-c44b130ce922,SIMILARITY,100,10000,0.2,40,NULL,NULL,NULL,0.0001,0.2,0.1,Epsilon = 0.1,RunStatus.SUCCESS,1671189269654,25.0
+12e1477e-c7bb-420b-9440-5449934af934,SIMILARITY,100,10000,0.2,40,NULL,NULL,0.01,0.0001,0.2,0.1,Epsilon = 0.1,RunStatus.SUCCESS,1671189269654,25.0
