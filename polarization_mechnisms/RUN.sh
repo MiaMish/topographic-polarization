@@ -75,3 +75,7 @@
 ./cli.py --base_db_path "$PWD/../resources/dec22/radical_exposure/" run-experiments
 ./cli.py --base_db_path "$PWD/../resources/dec22/radical_exposure/" generate-combined
 
+./cli.py --base_db_path "$PWD/../resources/jan23/stubbornness/" clear-db
+./cli.py --base_db_path "$PWD/../resources/jan23/stubbornness/" append-configs --simulation_types SIMILARITY,REPULSIVE --mios 0.2,0.4,0.8,1,1.2,1.4,1.6,1.8,2,2.5,3,3.5,4 --epsilons 0.2 --radical_exposure_etas None --switch_agent_rates None --switch_agent_sigmas None --mio_dist_types None,UNIFORM,UP,DOWN
+./cli.py --base_db_path "$PWD/../resources/jan23/stubbornness/" run-experiments
+./cli.py --base_db_path "$PWD/../resources/jan23/stubbornness/" generate-combined

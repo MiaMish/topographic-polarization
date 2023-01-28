@@ -1,7 +1,7 @@
 import math
 import uuid
 from enum import Enum
-from typing import List
+from typing import List, Any
 
 DEFAULT_RADICAL_EXPOSURE_ETA = None
 DEFAULT_SWITCH_AGENT_SIGMA = 0.2
@@ -25,6 +25,23 @@ class SimulationType(Enum):
     ASSIMILATION = 2
 
 
+class MioDistType(Enum):
+    UNIFORM = 0
+    UP = 1
+    DOWN = 2
+
+    @staticmethod
+    def convert(value: Any):
+        if str(value).lower() == "uniform":
+            return MioDistType.UNIFORM
+        elif str(value).lower() == "up":
+            return MioDistType.UP
+        elif str(value).lower() == "down":
+            return MioDistType.DOWN
+        else:
+            return None
+
+
 class SimulationConfig:
 
     def __init__(
@@ -43,6 +60,7 @@ class SimulationConfig:
             audit_iteration_every: int or None = 30,
             display_name: str or None = None,
             config_id: str or None = None,
+            mio_dist_type: MioDistType or None = None,
     ):
         """
 
@@ -82,6 +100,7 @@ class SimulationConfig:
         self.mark_stubborn_at = mark_stubborn_at
         self.audit_iteration_every = SimulationConfig._default_audit_every_val(num_iterations) if audit_iteration_every is None else audit_iteration_every
         self.display_name = display_name
+        self.mio_dist_type = mio_dist_type
 
     def __str__(self):
         flow_config_str = f"flow_type={self.simulation_type}\n" \
@@ -95,7 +114,8 @@ class SimulationConfig:
                           f"radical_exposure_eta={self.radical_exposure_eta}\n" \
                           f"truncate_at={self.truncate_at}\n" \
                           f"epsilon={self.epsilon}\n" \
-                          f"mark_stubborn_at={self.mark_stubborn_at}\n"
+                          f"mark_stubborn_at={self.mark_stubborn_at}\n" \
+                          f"mio_dist_type={self.mio_dist_type}\n"
         return flow_config_str
 
     @staticmethod

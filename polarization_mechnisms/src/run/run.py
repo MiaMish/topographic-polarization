@@ -9,7 +9,7 @@ from analyze.measurement.factory import MeasurementFactory
 from analyze.results import MeasurementResult
 from experiment.experiment import Experiment
 from experiment.result import ExperimentResult
-from simulation.config import SimulationConfig, SimulationType
+from simulation.config import SimulationConfig, SimulationType, MioDistType
 from storage.results import StoreResults
 from visualize.visualize import MEASUREMENTS_TO_VISUALIZE, scatter_plot_from_measurements, visualize_results
 import storage.constants as db_constants
@@ -57,7 +57,8 @@ def configs_to_run(
         switch_agent_rates: List[int],
         switch_agent_sigmas: List[float],
         radical_exposure_etas: List[float],
-        epsilons: List[float]
+        epsilons: List[float],
+        mio_dist_types: List[MioDistType],
 ):
     configs = [get_vanilla_similarity_conf()]
 
@@ -97,6 +98,10 @@ def configs_to_run(
         config.epsilon = epsilon
         return config
 
+    def change_mio_dist_type(config, mio_dist_type):
+        config.mio_dist_type = mio_dist_type
+        return config
+
     configs = x(configs, change_simulation_type, simulation_types)
     configs = x(configs, change_num_of_agents, num_of_agents)
     configs = x(configs, change_num_iterations, num_iterations)
@@ -106,6 +111,7 @@ def configs_to_run(
     configs = x(configs, change_switch_agent_sigma, switch_agent_sigmas)
     configs = x(configs, change_radical_exposure_eta, radical_exposure_etas)
     configs = x(configs, change_epsilon, epsilons)
+    configs = x(configs, change_mio_dist_type, mio_dist_types)
 
     logging.info(f"Using configs to run for:\n"
                  f"simulation_types: {simulation_types}\n"
@@ -116,7 +122,8 @@ def configs_to_run(
                  f"switch_agent_rates: {switch_agent_rates}\n"
                  f"switch_agent_sigmas: {switch_agent_sigmas}\n"
                  f"radical_exposure_etas: {radical_exposure_etas}\n"
-                 f"epsilons: {epsilons}")
+                 f"epsilons: {epsilons}\n"
+                 f"mio_dist_types: {mio_dist_types}")
     return configs
 
 

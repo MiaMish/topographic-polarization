@@ -1,4 +1,3 @@
-import logging
 from typing import List, Dict
 
 import numpy as np
@@ -59,7 +58,7 @@ class AssimilationSimulation(Simulation):
         #                  f"neighbors_cumulative_effect={neighbors_cumulative_effect}\n"
         #                  f"exposure_normalizer_coefficient={exposure_normalizer_coefficient}\n"
         #                  f"self.weights_dict[f'{agent}']={self.weights_dict[f'{agent}']}")
-        return agent_opinion + self.simulation_config.mio * exposure_normalizer_coefficient * neighbors_cumulative_effect
+        return agent_opinion + self.mio_to_use(agent) * exposure_normalizer_coefficient * neighbors_cumulative_effect
 
     def _update_opinions(self, agent_i, agent_j) -> ndarray:
         return np.array([self._update_single_opinion(i) for i in range(self.simulation_config.num_of_agents)])

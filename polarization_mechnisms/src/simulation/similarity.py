@@ -18,11 +18,13 @@ class SimilaritySimulation(Simulation):
         new_opinion_j = self.opinions_list[agent_j]
         agents_are_similar_enough = self._is_similar_enough(self.opinions_list[agent_i], self.opinions_list[agent_j])
         if agents_are_similar_enough and self._is_exposed_to_passive(self.opinions_list[agent_j]):
-            new_opinion_i = self.opinions_list[agent_i] + self.simulation_config.mio * (
+            new_opinion_i = self.opinions_list[agent_i] + self.mio_to_use(agent_j) * (
                     self.opinions_list[agent_j] - self.opinions_list[agent_i])
+            new_opinion_i = self._truncate_opinion(new_opinion_i)
         if agents_are_similar_enough and self._is_exposed_to_passive(self.opinions_list[agent_i]):
-            new_opinion_j = self.opinions_list[agent_j] + self.simulation_config.mio * (
+            new_opinion_j = self.opinions_list[agent_j] + self.mio_to_use(agent_j) * (
                     self.opinions_list[agent_i] - self.opinions_list[agent_j])
+            new_opinion_j = self._truncate_opinion(new_opinion_j)
         new_opinions = np.array(self.opinions_list)
         new_opinions[agent_i] = new_opinion_i
         new_opinions[agent_j] = new_opinion_j

@@ -4,8 +4,10 @@ from abc import abstractmethod, ABC
 import numpy as np
 from numpy import random, abs, ndarray
 
-from simulation.config import SimulationConfig
+from simulation.config import SimulationConfig, MioDistType
 from simulation.result import IterationResult, SimulationResult
+
+DEFAULT_MIN_MIO = 0.05
 
 
 class Simulation(ABC):
@@ -43,6 +45,40 @@ class Simulation(ABC):
         if probability_to_be_exposed < 0:
             return False
         return np.random.binomial(1, probability_to_be_exposed) == 1
+
+    def mio_to_use(self, agent: int) -> float:
+        if self.simulation_config.mio_dist_type is None:
+            result = self.simulation_config.mio
+            return result
+        max_mio = 2 * self.simulation_config.mio - DEFAULT_MIN_MIO
+        min_mio = DEFAULT_MIN_MIO
+
+        # In general,
+        # mio_to_use = ax^2 + bx + c, when x is the agent's index.
+        # a, b and c are calculated according to the distribution type.
+        a = b = c = 0
+        if self.simulation_config.mio_dist_type == MioDistType.UNIFORM:
+            # No `a` (should be linear)
+            a = 0
+            # ((max_min - min_mio) / (num_of_agents - 1))
+            b = ((max_mio - min_mio) / (self.simulation_config.num_of_agents - 1))
+            # min_mio
+            c = min_mio
+        if self.simulation_config.mio_dist_type == MioDistType.UP:
+            # 4 * min_mio / (num_of_agents - 1)**2
+            a = 4 * min_mio * (1 / ((self.simulation_config.num_of_agents - 1) * (self.simulation_config.num_of_agents - 1)))
+            # (max_mio - 5 * min_mio) / (num_of_agents - 1)
+            b = (max_mio - 5 * min_mio) / (self.simulation_config.num_of_agents - 1)
+            # min_mio
+            c = min_mio
+        if self.simulation_config.mio_dist_type == MioDistType.DOWN:
+            # min_mio / (num_of_agents - 1)**2
+            a = min_mio * (1 / ((self.simulation_config.num_of_agents - 1) * (self.simulation_config.num_of_agents - 1)))
+            # -1 * max_mio / (num_of_agents - 1)
+            b = - max_mio / (self.simulation_config.num_of_agents - 1)
+            # max_mio
+            c = max_mio
+        return a * agent * agent + b * agent + c
 
     def run_simulation(self) -> SimulationResult:
         results = SimulationResult()

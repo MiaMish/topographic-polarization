@@ -14,7 +14,7 @@ import storage.constants as db_constants
 from analyze.results import MeasurementResult
 from experiment.result import ExperimentResult
 from run.util import RunStatus
-from simulation.config import SimulationConfig, SimulationType
+from simulation.config import SimulationConfig, SimulationType, MioDistType
 from simulation.result import SimulationResult
 
 
@@ -107,6 +107,9 @@ def experiment_configs_to_df(simulation_configs: List[SimulationConfig], run_sta
         db_constants.NUM_OF_AGENTS: [simulation_config.num_of_agents for simulation_config in simulation_configs],
         db_constants.NUM_ITERATIONS: [simulation_config.num_iterations for simulation_config in simulation_configs],
         db_constants.MIO: [simulation_config.mio for simulation_config in simulation_configs],
+        db_constants.MIO_DIST_TYPE: [(simulation_config.mio_dist_type.name
+                                      if simulation_config.mio_dist_type is not None
+                                      else None) for simulation_config in simulation_configs],
         db_constants.NUM_OF_REPETITIONS: [simulation_config.num_of_repetitions for simulation_config in
                                           simulation_configs],
         db_constants.SWITCH_AGENT_RATE: [simulation_config.switch_agent_rate for simulation_config in
@@ -150,6 +153,7 @@ def df_to_experiment_configs(row) -> SimulationConfig:
         num_of_agents=int(row[db_constants.NUM_OF_AGENTS]),
         num_iterations=int(row[db_constants.NUM_ITERATIONS]),
         mio=float(row[db_constants.MIO]),
+        mio_dist_type=MioDistType.convert(row[db_constants.MIO_DIST_TYPE]),
         num_of_repetitions=int(row[db_constants.NUM_OF_REPETITIONS]),
         switch_agent_rate=None if math.isnan(row[db_constants.SWITCH_AGENT_RATE]) else float(
             row[db_constants.SWITCH_AGENT_RATE]),
