@@ -26,7 +26,7 @@ SWITCH_AGENT_SIGMA = "switch_agent_sigma"
 SWITCH_AGENT_RATE = "switch_agent_rate"
 NUM_OF_REPETITIONS = "num_of_repetitions"
 MIO = "mio"
-MIO_DIST_TYPE = "mio_dist_type"
+MIO_SIGMA = "mio_sigma"
 NUM_ITERATIONS = "num_iterations"
 NUM_OF_AGENTS = "num_of_agents"
 SIMULATION_TYPE = "simulation_type"
@@ -43,7 +43,7 @@ TABLES = {
         NUM_OF_AGENTS,
         NUM_ITERATIONS,
         MIO,
-        MIO_DIST_TYPE,
+        MIO_SIGMA,
         NUM_OF_REPETITIONS,
         SWITCH_AGENT_RATE,
         SWITCH_AGENT_SIGMA,

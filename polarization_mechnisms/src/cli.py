@@ -7,7 +7,7 @@ import analyze.measurement.constants as measurement_constants
 import run.run as run
 import storage.constants as db_constants
 from run.util import RunStatus
-from simulation.config import SimulationType, MioDistType
+from simulation.config import SimulationType
 from storage.results import StoreResults
 
 DEFAULT_NUM_OF_AGENTS = 100
@@ -43,7 +43,7 @@ def clear_db():
 @click.option('--switch_agent_sigmas', 'switch_agent_sigmas', type=str, default="None,0.2")
 @click.option('--radical_exposure_etas', 'radical_exposure_etas', type=str, default="None,0.2")
 @click.option('--epsilons', 'epsilons', type=str, default="0.2,0.4,0.6")
-@click.option('--mio_dist_types', 'mio_dist_types', type=str, default="None")
+@click.option('--mio_sigmas', 'mio_sigmas', type=str, default="None")
 def append_configs(
         simulation_types: str,
         num_of_agents: str,
@@ -54,9 +54,8 @@ def append_configs(
         switch_agent_sigmas: str,
         radical_exposure_etas: str,
         epsilons: str,
-        mio_dist_types: str,
+        mio_sigmas: str,
 ):
-    print(f"mio_dist_types {mio_dist_types}")
     StoreResults.instance().bootstrap_db_files()
     configs_list_to_run = run.configs_to_run(
         simulation_types=[SimulationType.SIMILARITY if t == "SIMILARITY" else SimulationType.REPULSIVE for t in
@@ -69,7 +68,7 @@ def append_configs(
         switch_agent_sigmas=[float(n) if n != "None" else None for n in switch_agent_sigmas.split(",")],
         radical_exposure_etas=[float(n) if n != "None" else None for n in radical_exposure_etas.split(",")],
         epsilons=[float(n) if n != "None" else None for n in epsilons.split(",")],
-        mio_dist_types=[MioDistType.convert(t) for t in mio_dist_types.split(",")],
+        mio_sigmas=[float(n) if n != "None" else None for n in mio_sigmas.split(",")],
     )
     StoreResults.instance().add_configs_to_run(configs_list_to_run)
 
