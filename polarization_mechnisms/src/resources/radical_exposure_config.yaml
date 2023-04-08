@@ -1,0 +1,11 @@
+# Params value were calculated using ../run/parameters.py
+
+# Radical exposure eta between 0 and 10, including 10
+# min_val: 0.000000, max_val: 10.000000, step: 0.344828
+- simulation_types: ['REPULSIVE', 'SIMILARITY']
+  mios: [0.2]
+  mio_sigmas: [null]
+  epsilons: [0.200000]
+  radical_exposure_etas: [0.000000,0.344828,0.689655,1.034483,1.379310,1.724138,2.068966,2.413793,2.758621,3.103448,3.448276,3.793103,4.137931,4.482759,4.827586,5.172414,5.517241,5.862069,6.206897,6.551724,6.896552,7.241379,7.586207,7.931034,8.275862,8.620690,8.965517,9.310345,9.655172]
+  switch_agent_rates: [null]
+  switch_agent_sigmas: [null]

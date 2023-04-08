@@ -39,9 +39,8 @@ class StoreResults:
     def __init__(self, base_path: str) -> None:
         self.base_path = base_path
         if StoreResults.__instance is not None:
-            raise Exception("Already initialized!")
-        else:
-            StoreResults.__instance = self
+            logging.warning("Already initialized!")
+        StoreResults.__instance = self
 
     def clear_db(self):
         logging.info(f"Clearing DB from: {self.base_path}")
@@ -74,7 +73,8 @@ class StoreResults:
         self.bootstrap_measurement_file_if_needed(experiment_id)
         directory_path = self.base_path + self._partition_prefix(experiment_id)
         existing_df = pd.read_csv(directory_path + db_constants.MEASUREMENTS, na_values=['NULL'])
-        existing_df = existing_df.append(converter.measurements_to_df(measurement_results), ignore_index=True)
+        as_df = converter.measurements_to_df(measurement_results)
+        existing_df = existing_df.append(as_df, ignore_index=True)
         existing_df.to_csv(directory_path + db_constants.MEASUREMENTS, index=False, na_rep='NULL')
 
     def retrieve_measurement_results_for_experiment(self, experiment_id: UUID, display_name: string) -> List[MeasurementResult]:

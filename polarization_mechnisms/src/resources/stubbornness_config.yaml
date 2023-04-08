@@ -1,0 +1,61 @@
+# Params value were calculated using ../run/parameters.py
+
+# Repulsive for constant mio between 0 and 0.5
+# min_val: 0.000000, max_val: 0.500000, step: 0.016667
+- simulation_types: ['REPULSIVE']
+  mios: [0.000000,0.016667,0.033333,0.050000,0.066667,0.083333,0.100000,0.116667,0.133333,0.150000,0.166667,0.183333,0.200000,0.216667,0.233333,0.250000,0.266667,0.283333,0.300000,0.316667,0.333333,0.350000,0.366667,0.383333,0.400000,0.416667,0.433333,0.450000,0.466667,0.483333]
+  mio_sigmas: [null]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [null]
+  switch_agent_sigmas: [null]
+
+# Repulsive for normal distribution with constant mio=0.2
+# min_val: 0.000001, max_val: 0.077641, step: 0.002588
+- simulation_types: ['REPULSIVE']
+  mios: [0.2]
+  mio_sigmas: [0.000001,0.002589,0.005177,0.007765,0.010353,0.012941,0.015529,0.018117,0.020705,0.023293,0.025881,0.028469,0.031057,0.033645,0.036233,0.038821,0.041409,0.043997,0.046585,0.049173,0.051761,0.054349,0.056937,0.059525,0.062113,0.064701,0.067289,0.069877,0.072465,0.075053]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [null]
+  switch_agent_sigmas: [null]
+
+# Repulsive for normal distribution with constant sigma=0.075
+# min_val: 0.193200, max_val: 0.306800, step: 0.003787
+- simulation_types: ['REPULSIVE']
+  mios: [0.193200,0.196987,0.200773,0.204560,0.208347,0.212133,0.215920,0.219707,0.223493,0.227280,0.231067,0.234853,0.238640,0.242427,0.246213,0.250000,0.253787,0.257573,0.261360,0.265147,0.268933,0.272720,0.276507,0.280293,0.284080,0.287867,0.291653,0.295440,0.299227,0.303013]
+  mio_sigmas: [0.075, null]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [null]
+  switch_agent_sigmas: [null]
+
+# Similarity for constant mio between 0 and 1
+# min_val: 0.000000, max_val: 1.000000, step: 0.033333
+- simulation_types: ['SIMILARITY']
+  mios: [0.000000,0.033333,0.066667,0.100000,0.133333,0.166667,0.200000,0.233333,0.266667,0.300000,0.333333,0.366667,0.400000,0.433333,0.466667,0.500000,0.533333,0.566667,0.600000,0.633333,0.666667,0.700000,0.733333,0.766667,0.800000,0.833333,0.866667,0.900000,0.933333,0.966667]
+  mio_sigmas: [null]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [null]
+  switch_agent_sigmas: [null]
+
+# Similarity for normal distribution with constant mio=0.2
+# min_val: 0.000001, max_val: 0.077641, step: 0.002588
+- simulation_types: ['SIMILARITY']
+  mios: [0.200000]
+  mio_sigmas: [0.000001,0.002589,0.005177,0.007765,0.010353,0.012941,0.015529,0.018117,0.020705,0.023293,0.025881,0.028469,0.031057,0.033645,0.036233,0.038821,0.041409,0.043997,0.046585,0.049173,0.051761,0.054349,0.056937,0.059525,0.062113,0.064701,0.067289,0.069877,0.072465,0.075053]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [null]
+  switch_agent_sigmas: [null]
+
+# Similarity for normal distribution with constant sigma=0.075
+# min_val: 0.193200, max_val: 0.806800, step: 0.020453
+- simulation_types: ['SIMILARITY']
+  mios: [0.193200,0.213653,0.234107,0.254560,0.275013,0.295467,0.315920,0.336373,0.356827,0.377280,0.397733,0.418187,0.438640,0.459093,0.479547,0.500000,0.520453,0.540907,0.561360,0.581813,0.602267,0.622720,0.643173,0.663627,0.684080,0.704533,0.724987,0.745440,0.765893,0.786347]
+  mio_sigmas: [0.075]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [null]
+  switch_agent_sigmas: [null]

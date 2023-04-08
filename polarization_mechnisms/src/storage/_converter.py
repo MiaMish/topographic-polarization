@@ -90,6 +90,7 @@ def df_to_measurements(df: DataFrame, experiment_id: UUID, display_name: string)
         filtered_df = df[df[db_constants.MEASUREMENT_TYPE] == measurement_type]
         result.append(MeasurementResult(
             filtered_df[db_constants.VALUE].to_numpy(),
+            filtered_df[db_constants.SAMPLE_SDT].to_numpy(),
             filtered_df[db_constants.X].to_numpy(),
             experiment_id,
             str(measurement_type),
@@ -133,14 +134,16 @@ def measurements_to_df(measurement_results: List[MeasurementResult]) -> DataFram
         db_constants.EXPERIMENT_ID: [],
         db_constants.MEASUREMENT_TYPE: [],
         db_constants.X: [],
-        db_constants.VALUE: []
+        db_constants.VALUE: [],
+        db_constants.SAMPLE_SDT: []
     })
     for measurement_result in measurement_results:
         df = df.append(pd.DataFrame(data={
             db_constants.EXPERIMENT_ID: [measurement_result.experiment_id] * len(measurement_result.y),
             db_constants.MEASUREMENT_TYPE: [measurement_result.measurement_type] * len(measurement_result.y),
             db_constants.X: measurement_result.x,
-            db_constants.VALUE: measurement_result.y
+            db_constants.VALUE: measurement_result.y,
+            db_constants.SAMPLE_SDT: measurement_result.sample_stds
         }), ignore_index=True)
     return df
 

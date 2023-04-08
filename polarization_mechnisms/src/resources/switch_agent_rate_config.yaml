@@ -1,0 +1,11 @@
+# Params value were calculated using ../run/parameters.py
+
+# Switch agent rate between 0 and 200, including 200
+# min_val: 2.000000, max_val: 200.000000, step: 6.827586
+- simulation_types: ['REPULSIVE', 'SIMILARITY']
+  mios: [0.2]
+  mio_sigmas: [null]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [2.000000,8.827586,15.655172,22.482759,29.310345,36.137931,42.965517,49.793103,56.620690,63.448276,70.275862,77.103448,83.931034,90.758621,97.586207,104.413793,111.241379,118.068966,124.896552,131.724138,138.551724,145.379310,152.206897,159.034483,165.862069,172.689655,179.517241,186.344828,193.172414]
+  switch_agent_sigmas: [0.2]

@@ -45,7 +45,7 @@ def scatter_plot_from_measurements(measurement: Measurement, measurement_results
     colors_iter = _colors_generator()
     for measurement_result in measurement_results:
         scattered.append(plt.scatter(measurement_result.x, measurement_result.y, color=next(colors_iter)))
-        names.append(measurement_result.display_name)  # experiment_result.simulation_configs.display_name
+        names.append(measurement_result.display_name)
     plt.legend(scattered,
                names,
                scatterpoints=1,

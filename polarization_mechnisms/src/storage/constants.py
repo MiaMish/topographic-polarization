@@ -34,6 +34,7 @@ CONFIG_ID = "config_id"
 MEASUREMENT_TYPE = "measurement_type"
 X = "x"
 VALUE = "value"
+SAMPLE_SDT = "sample_std"
 STATUS = "status"
 
 TABLES = {
@@ -78,6 +79,7 @@ TABLES = {
         EXPERIMENT_ID,
         MEASUREMENT_TYPE,
         X,
-        VALUE
+        VALUE,
+        SAMPLE_SDT
     ]
 }

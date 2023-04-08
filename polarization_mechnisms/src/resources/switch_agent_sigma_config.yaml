@@ -1,0 +1,9 @@
+# Switch agent sigma between 0.05 and 2, including 2
+# min_val: 0.050000, max_val: 2.000000, step: 0.067241
+- simulation_types: ['REPULSIVE', 'SIMILARITY']
+  mios: [0.2]
+  mio_sigmas: [null]
+  epsilons: [0.200000]
+  radical_exposure_etas: [null]
+  switch_agent_rates: [10]
+  switch_agent_sigmas: [0.050000,0.117241,0.184483,0.251724,0.318966,0.386207,0.453448,0.520690,0.587931,0.655172,0.722414,0.789655,0.856897,0.924138,0.991379,1.058621,1.125862,1.193103,1.260345,1.327586,1.394828,1.462069,1.529310,1.596552,1.663793,1.731034,1.798276,1.865517,1.932759]

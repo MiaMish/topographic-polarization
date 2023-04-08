@@ -5,6 +5,9 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Dict, Any
+
+import colorlog
+
 from analyze.measurement.factory import MeasurementFactory
 from analyze.results import MeasurementResult
 from experiment.experiment import Experiment
@@ -128,7 +131,8 @@ def configs_to_run(
 
 
 def config_loger(is_worker: bool = False, use_log_file: bool = True):
-    log_file = None
+    log_fmt = 'PID=%(process)d TIME=[%(asctime)s] NAME=%(name)s LEVEL=%(levelname)s %(message)s'
+    date_format = '%Y-%m-%d %H:%M:%S'
     if use_log_file:
         log_dir = f"{BASE_LOG_PATH}{datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
         if is_worker:
@@ -141,17 +145,16 @@ def config_loger(is_worker: bool = False, use_log_file: bool = True):
             encoding="utf-8",
             level=LOG_LEVEL,
             filename=log_file,
-            format='PID=%(process)d TIME=[%(asctime)s] NAME=%(name)s LEVEL=%(levelname)s %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            format=log_fmt,
+            datefmt=date_format
         )
-    else:
-        logging.basicConfig(
-            encoding="utf-8",
-            level=LOG_LEVEL,
-            format='PID=%(process)d TIME=[%(asctime)s] NAME=%(name)s LEVEL=%(levelname)s %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
-        )
-    logging.info(f"Configured logger for filename={log_file}")
+        return
+    logger = logging.getLogger()
+    logger.setLevel(LOG_LEVEL)
+    handler = colorlog.StreamHandler()
+    formatter = colorlog.ColoredFormatter(f'%(log_color)s{log_fmt}', datefmt=date_format)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
 
 
 def run_using_conf(conf: SimulationConfig) -> tuple[SimulationConfig, ExperimentResult, list[MeasurementResult]]:
